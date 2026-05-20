@@ -192,7 +192,7 @@ body, html, #root {
   width: 512px;
   height: 384px;
   background: #020205;
-  border-radius: 35px; /* Curved corners matching a glass tube */
+  border-radius: 0px; /* Sharp corners instead of rounded/beveled corners */
   padding: 1.5rem;
   position: relative;
   overflow: hidden;
@@ -200,7 +200,7 @@ body, html, #root {
   flex-direction: column;
   justify-content: space-between;
   box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.95);
-  border: 12px solid #000000;
+  border: none; /* Remove the black CSS border bezel */
   box-sizing: border-box;
 }
 

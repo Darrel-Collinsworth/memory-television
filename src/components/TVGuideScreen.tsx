@@ -12,6 +12,8 @@ interface ProgramGuideItem {
 export const TVGuideScreen = () => {
   const transitioning = useWorldStore((state) => state.transitioning);
   const transitionTo = useWorldStore((state) => state.transitionTo);
+  const setHoveredWorld = useWorldStore((state) => state.setHoveredWorld);
+  const triggerSound = useWorldStore((state) => state.triggerSound);
 
   // States
   const [activeChannelId, setActiveChannelId] = useState<string | null>(null);
@@ -73,6 +75,7 @@ export const TVGuideScreen = () => {
   // Channel navigation handler
   const handleSelectChannel = (channelId: WorldType) => {
     if (transitioning) return;
+    triggerSound('thunk'); // heavy physical switch clunk!
     transitionTo(channelId);
   };
 
@@ -87,6 +90,8 @@ export const TVGuideScreen = () => {
       } else {
         // First tap selects/previews
         setActiveChannelId(channelId);
+        setHoveredWorld(channelId as WorldType);
+        triggerSound('tick'); // warm switch click!
       }
     } else {
       // Desktop single click navigates (hover handled by mouse enter)
@@ -238,7 +243,10 @@ export const TVGuideScreen = () => {
       {/* ==================== BOTTOM HALF: CHANNEL LIST GRID ==================== */}
       <div 
         className="tv-guide-channels-grid"
-        onMouseLeave={() => setActiveChannelId(null)}
+        onMouseLeave={() => {
+          setActiveChannelId(null);
+          setHoveredWorld(null);
+        }}
       >
         {Object.values(worlds).map((world) => {
           const isHovered = activeChannelId === world.id;
@@ -248,7 +256,11 @@ export const TVGuideScreen = () => {
             <div
               key={world.id}
               className={`tv-guide-channel-row ${isHovered ? 'active' : ''}`}
-              onMouseEnter={() => setActiveChannelId(world.id)}
+              onMouseEnter={() => {
+                setActiveChannelId(world.id);
+                setHoveredWorld(world.id as WorldType);
+                triggerSound('tick'); // warm switch click!
+              }}
               onClick={() => handleRowInteraction(world.id)}
             >
               {/* Channel Number / Label Column */}

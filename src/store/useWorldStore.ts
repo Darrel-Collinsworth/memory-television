@@ -8,11 +8,15 @@ interface WorldState {
   soundOn: boolean;
   tvRaised: boolean;
   debugMode: boolean;
+  hoveredWorld: WorldType | null;
+  soundTrigger: { type: 'tick' | 'thunk' | null; id: number };
   setWorld: (world: WorldType) => void;
   setTransitioning: (transitioning: boolean) => void;
   setSoundOn: (soundOn: boolean) => void;
   setTvRaised: (tvRaised: boolean) => void;
   setDebugMode: (debugMode: boolean) => void;
+  setHoveredWorld: (world: WorldType | null) => void;
+  triggerSound: (type: 'tick' | 'thunk') => void;
   transitionTo: (world: WorldType) => Promise<void>;
 }
 
@@ -22,12 +26,16 @@ export const useWorldStore = create<WorldState>((set, get) => ({
   soundOn: false,
   tvRaised: true, // Default raised so user sees TV menu at start
   debugMode: false, // Default off
+  hoveredWorld: null,
+  soundTrigger: { type: null, id: 0 },
 
   setWorld: (world) => set({ currentWorld: world }),
   setTransitioning: (transitioning) => set({ transitioning }),
   setSoundOn: (soundOn) => set({ soundOn }),
   setTvRaised: (tvRaised) => set({ tvRaised }),
   setDebugMode: (debugMode) => set({ debugMode }),
+  setHoveredWorld: (world) => set({ hoveredWorld: world }),
+  triggerSound: (type) => set((state) => ({ soundTrigger: { type, id: state.soundTrigger.id + 1 } })),
 
   transitionTo: async (world) => {
     // If we're already transitioning or already in that world, ignore
