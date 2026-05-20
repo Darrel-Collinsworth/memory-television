@@ -30,10 +30,10 @@ export const MemoryTelevision = () => {
 
     // Target configuration for a waist-held retro TV companion
     // If lowered (!tvRaised), it descends smoothly flat out of the way
-    let targetY = isHome ? -0.55 : -0.85;
+    let targetY = isHome ? -0.42 : -0.50;
     let targetZ = isHome ? -2.2 : -2.4;
     let targetScale = isHome ? 0.65 : 0.54;
-    let targetRotX = isHome ? -0.52 : -0.62; // Tilted up to look down at it
+    let targetRotX = isHome ? -0.42 : -0.48; // Tilted up to look down at it
 
     if (!tvRaised) {
       targetY = isHome ? -1.95 : -2.2; // Placed at the bottom edge
@@ -77,46 +77,46 @@ export const MemoryTelevision = () => {
         {/* Main TV Casing Group */}
         <group rotation={[0, 0, 0]}>
           
-          {/* --- SLEEK 2000s CHARCOAL PLASTIC BEZEL/FRONT --- */}
+          {/* --- SLEEK 2000s SILVER PLASTIC BEZEL/FRONT --- */}
           <group>
             {/* Main bezel flat box */}
             <mesh castShadow receiveShadow>
               <boxGeometry args={[2.2, 1.9, 0.3]} />
               <meshStandardMaterial 
-                color="#26272b" // Elegant matte dark charcoal plastic of the early 2000s Zenith
-                roughness={0.65} 
-                metalness={0.15}
+                color="#c2c4ca" // Satin-silver painted plastic — early 2000s Zenith
+                roughness={0.55} 
+                metalness={0.08}
               />
             </mesh>
 
             {/* Rounded left edge column */}
             <mesh position={[-1.1, 0, 0]} castShadow>
               <cylinderGeometry args={[0.15, 0.15, 1.9, 16]} />
-              <meshStandardMaterial color="#26272b" roughness={0.65} metalness={0.15} />
+              <meshStandardMaterial color="#c2c4ca" roughness={0.55} metalness={0.08} />
             </mesh>
 
             {/* Rounded right edge column */}
             <mesh position={[1.1, 0, 0]} castShadow>
               <cylinderGeometry args={[0.15, 0.15, 1.9, 16]} />
-              <meshStandardMaterial color="#26272b" roughness={0.65} metalness={0.15} />
+              <meshStandardMaterial color="#c2c4ca" roughness={0.55} metalness={0.08} />
             </mesh>
 
             {/* Rounded top edge column */}
             <mesh position={[0, 0.95, 0]} rotation={[0, 0, Math.PI / 2]} castShadow>
               <cylinderGeometry args={[0.15, 0.15, 2.2, 16]} />
-              <meshStandardMaterial color="#26272b" roughness={0.65} metalness={0.15} />
+              <meshStandardMaterial color="#c2c4ca" roughness={0.55} metalness={0.08} />
             </mesh>
 
             {/* Rounded top-left corner sphere */}
             <mesh position={[-1.1, 0.95, 0]} castShadow>
               <sphereGeometry args={[0.15, 16, 16]} />
-              <meshStandardMaterial color="#26272b" roughness={0.65} metalness={0.15} />
+              <meshStandardMaterial color="#c2c4ca" roughness={0.55} metalness={0.08} />
             </mesh>
 
             {/* Rounded top-right corner sphere */}
             <mesh position={[1.1, 0.95, 0]} castShadow>
               <sphereGeometry args={[0.15, 16, 16]} />
-              <meshStandardMaterial color="#26272b" roughness={0.65} metalness={0.15} />
+              <meshStandardMaterial color="#c2c4ca" roughness={0.55} metalness={0.08} />
             </mesh>
           </group>
 
@@ -126,7 +126,7 @@ export const MemoryTelevision = () => {
             distanceFactor={1.5}
             position={[-0.92, 0.78, 0.16]}
             style={{
-              color: '#a1a1aa',
+              color: '#1e1f24',
               fontFamily: '"Share Tech Mono", monospace, sans-serif',
               fontSize: '13px',
               letterSpacing: '0.05em',
@@ -166,129 +166,314 @@ export const MemoryTelevision = () => {
             <meshStandardMaterial color="#0d0d12" roughness={0.8} />
           </mesh>
 
-          {/* --- BOTTOM ZENITH DASHBOARD PANEL --- */}
+          {/* --- BOTTOM ZENITH TV/VCR COMBO DASHBOARD --- */}
           <group position={[0, -0.7, 0.15]}>
             
-            {/* Left Speaker Grill - Slanted custom vertical slits */}
+            {/* Left Speaker Grill - Slanted custom vertical slits in silver */}
             <group position={[-0.8, 0.05, 0.01]}>
               {/* Dark background backing */}
               <mesh castShadow>
                 <boxGeometry args={[0.55, 0.28, 0.01]} />
                 <meshStandardMaterial color="#0b0b0f" roughness={0.9} />
               </mesh>
-              {/* Vertical slats with progressive heights to match the trapezoidal Zenith grille */}
+              {/* Vertical slats with progressive heights */}
               {Array.from({ length: 9 }).map((_, j) => {
                 const xPos = -0.22 + j * 0.055; // from -0.22 to 0.22
-                // Slant: taller on the right (inner side, close to center) and shorter on the left (outer side)
                 const height = 0.14 + (j * 0.012); // from 0.14 to 0.236
                 const yPos = 0.08 - height / 2; // align top edges, bottom slants down!
                 return (
                   <mesh key={`spk-l-slat-${j}`} position={[xPos, yPos, 0.006]}>
                     <boxGeometry args={[0.018, height, 0.006]} />
-                    <meshStandardMaterial color="#26272b" roughness={0.7} />
+                    <meshStandardMaterial color="#c2c4ca" roughness={0.5} metalness={0.08} />
                   </mesh>
                 );
               })}
             </group>
 
-            {/* Right Speaker Grill - Slanted custom vertical slits */}
+            {/* Right Speaker Grill - Slanted custom vertical slits in silver */}
             <group position={[0.8, 0.05, 0.01]}>
               {/* Dark background backing */}
               <mesh castShadow>
                 <boxGeometry args={[0.55, 0.28, 0.01]} />
                 <meshStandardMaterial color="#0b0b0f" roughness={0.9} />
               </mesh>
-              {/* Vertical slats with progressive heights to match the trapezoidal Zenith grille */}
+              {/* Vertical slats with progressive heights */}
               {Array.from({ length: 9 }).map((_, j) => {
                 const xPos = -0.22 + j * 0.055; // from -0.22 to 0.22
-                // Slant: tallest at the left (inner side, close to center) and shortest at the right (outer side)
                 const height = 0.236 - (j * 0.012); // from 0.236 to 0.14
                 const yPos = 0.08 - height / 2; // align top edges, bottom slants down!
                 return (
                   <mesh key={`spk-r-slat-${j}`} position={[xPos, yPos, 0.006]}>
                     <boxGeometry args={[0.018, height, 0.006]} />
-                    <meshStandardMaterial color="#26272b" roughness={0.7} />
+                    <meshStandardMaterial color="#c2c4ca" roughness={0.5} metalness={0.08} />
                   </mesh>
                 );
               })}
             </group>
 
-            {/* Silver/Chrome Stylized Zenith Logo Emblem (Center aligned above buttons) */}
-            <group position={[0, 0.18, 0.02]}>
+            {/* Stylized tiny chrome logo emblem above VHS slot */}
+            <group position={[0, 0.13, 0.015]}>
               {/* Outer oval ring */}
               <mesh rotation={[0, 0, Math.PI / 2]} castShadow>
-                <cylinderGeometry args={[0.055, 0.055, 0.01, 24]} />
+                <cylinderGeometry args={[0.04, 0.04, 0.008, 24]} />
                 <meshStandardMaterial color="#c0c0c0" metalness={0.9} roughness={0.1} />
               </mesh>
-              <mesh rotation={[0, 0, Math.PI / 2]} position={[0, 0, 0.002]}>
-                <cylinderGeometry args={[0.045, 0.045, 0.01, 24]} />
+              <mesh rotation={[0, 0, Math.PI / 2]} position={[0, 0, 0.001]}>
+                <cylinderGeometry args={[0.033, 0.033, 0.008, 24]} />
                 <meshStandardMaterial color="#0b0b0f" roughness={0.9} />
               </mesh>
               
-              {/* Stylized shiny Zenith "Z" badge (lightning bolt-like 3-mesh Z) */}
-              <group position={[0, 0, 0.006]}>
-                {/* Top bar */}
-                <mesh position={[0, 0.02, 0]}>
-                  <boxGeometry args={[0.038, 0.006, 0.005]} />
+              {/* Shiny metallic "Z" badge */}
+              <group position={[0, 0, 0.005]}>
+                <mesh position={[0, 0.015, 0]}>
+                  <boxGeometry args={[0.028, 0.004, 0.004]} />
                   <meshStandardMaterial color="#ffffff" metalness={0.9} roughness={0.05} />
                 </mesh>
-                {/* Diagonal bar */}
                 <mesh position={[0, 0, 0]} rotation={[0, 0, -Math.PI / 6]}>
-                  <boxGeometry args={[0.006, 0.042, 0.005]} />
+                  <boxGeometry args={[0.004, 0.03, 0.004]} />
                   <meshStandardMaterial color="#ffffff" metalness={0.9} roughness={0.05} />
                 </mesh>
-                {/* Bottom bar */}
-                <mesh position={[0, -0.02, 0]}>
-                  <boxGeometry args={[0.038, 0.006, 0.005]} />
+                <mesh position={[0, -0.015, 0]}>
+                  <boxGeometry args={[0.028, 0.004, 0.004]} />
                   <meshStandardMaterial color="#ffffff" metalness={0.9} roughness={0.05} />
                 </mesh>
               </group>
             </group>
 
-            {/* Tiny printed labels under Z logo */}
+            {/* Printed retro technical labels */}
             <Html
               transform
               distanceFactor={1.5}
-              position={[-0.1, 0.08, 0.022]}
+              position={[-0.15, 0.12, 0.01]}
               style={{
-                color: '#52525b',
+                color: '#4b5563',
                 fontFamily: 'monospace',
-                fontSize: '7px',
+                fontSize: '4.5px',
+                fontWeight: 'bold',
                 whiteSpace: 'nowrap',
                 pointerEvents: 'none',
                 userSelect: 'none',
-                transform: 'translate(-50%, -50%)',
               }}
             >
-              SDTV
+              Hi-Fi Stereo
             </Html>
             <Html
               transform
               distanceFactor={1.5}
-              position={[0.1, 0.08, 0.022]}
+              position={[0.15, 0.12, 0.01]}
               style={{
-                color: '#52525b',
+                color: '#4b5563',
                 fontFamily: 'monospace',
-                fontSize: '7px',
+                fontSize: '4.5px',
+                fontWeight: 'bold',
                 whiteSpace: 'nowrap',
                 pointerEvents: 'none',
                 userSelect: 'none',
-                transform: 'translate(-50%, -50%)',
               }}
             >
-              stereo
+              TV/VCR COMBO
             </Html>
 
-            {/* Sleek control buttons under the screen */}
-            {/* Power Button (with soft glowing green LED next to it) */}
-            <group position={[-0.22, -0.04, 0.02]}>
+            {/* --- VHS PLAYER TAPE SLOT & DOOR --- */}
+            <group position={[0, 0.02, 0.005]}>
+              {/* Outer slot bezel boundary */}
               <mesh castShadow>
-                <boxGeometry args={[0.06, 0.035, 0.015]} />
+                <boxGeometry args={[0.74, 0.16, 0.015]} />
+                <meshStandardMaterial color="#9ea1a8" roughness={0.35} metalness={0.4} />
+              </mesh>
+              {/* Dark inner cavity backing */}
+              <mesh position={[0, 0, 0.005]}>
+                <boxGeometry args={[0.70, 0.12, 0.01]} />
+                <meshStandardMaterial color="#07080a" roughness={0.9} />
+              </mesh>
+              {/* Tap flap door slightly set inside */}
+              <mesh position={[0, 0, 0.004]} rotation={[-0.08, 0, 0]}>
+                <boxGeometry args={[0.68, 0.115, 0.004]} />
+                <meshStandardMaterial color="#14151a" roughness={0.65} metalness={0.1} />
+              </mesh>
+              {/* Indented door line crease */}
+              <mesh position={[0, -0.048, 0.006]}>
+                <boxGeometry args={[0.66, 0.005, 0.002]} />
+                <meshStandardMaterial color="#07080a" />
+              </mesh>
+              {/* Tiny printed text on the tape door */}
+              <Html
+                transform
+                distanceFactor={1.5}
+                position={[0, 0.0, 0.008]}
+                style={{
+                  color: '#475569',
+                  fontFamily: '"Share Tech Mono", monospace',
+                  fontSize: '4.2px',
+                  fontWeight: 'bold',
+                  letterSpacing: '0.12em',
+                  whiteSpace: 'nowrap',
+                  pointerEvents: 'none',
+                  userSelect: 'none',
+                }}
+              >
+                INSERT VIDEOCASSETTE ◄
+              </Html>
+            </group>
+
+            {/* --- VCR AESTHETIC BUTTONS ROW --- */}
+            {/* EJECT */}
+            <group position={[-0.22, -0.09, 0.01]}>
+              <mesh castShadow>
+                <boxGeometry args={[0.045, 0.03, 0.012]} />
+                <meshStandardMaterial color="#1a1c22" roughness={0.6} />
+              </mesh>
+              <Html
+                transform
+                distanceFactor={1.5}
+                position={[0, 0.024, 0.002]}
+                style={{
+                  color: '#6b7280',
+                  fontFamily: 'monospace',
+                  fontSize: '4px',
+                  fontWeight: 'bold',
+                  whiteSpace: 'nowrap',
+                  pointerEvents: 'none',
+                  userSelect: 'none',
+                }}
+              >
+                EJECT ⏏
+              </Html>
+            </group>
+
+            {/* REWIND */}
+            <group position={[-0.11, -0.09, 0.01]}>
+              <mesh castShadow>
+                <boxGeometry args={[0.045, 0.03, 0.012]} />
+                <meshStandardMaterial color="#1a1c22" roughness={0.6} />
+              </mesh>
+              <Html
+                transform
+                distanceFactor={1.5}
+                position={[0, 0.024, 0.002]}
+                style={{
+                  color: '#6b7280',
+                  fontFamily: 'monospace',
+                  fontSize: '4px',
+                  fontWeight: 'bold',
+                  whiteSpace: 'nowrap',
+                  pointerEvents: 'none',
+                  userSelect: 'none',
+                }}
+              >
+                REW ◄◄
+              </Html>
+            </group>
+
+            {/* PLAY */}
+            <group position={[0.0, -0.09, 0.01]}>
+              <mesh castShadow>
+                <boxGeometry args={[0.045, 0.03, 0.012]} />
+                <meshStandardMaterial color="#1a1c22" roughness={0.6} />
+              </mesh>
+              <Html
+                transform
+                distanceFactor={1.5}
+                position={[0, 0.024, 0.002]}
+                style={{
+                  color: '#6b7280',
+                  fontFamily: 'monospace',
+                  fontSize: '4px',
+                  fontWeight: 'bold',
+                  whiteSpace: 'nowrap',
+                  pointerEvents: 'none',
+                  userSelect: 'none',
+                }}
+              >
+                PLAY ►
+              </Html>
+            </group>
+
+            {/* FAST-FORWARD */}
+            <group position={[0.11, -0.09, 0.01]}>
+              <mesh castShadow>
+                <boxGeometry args={[0.045, 0.03, 0.012]} />
+                <meshStandardMaterial color="#1a1c22" roughness={0.6} />
+              </mesh>
+              <Html
+                transform
+                distanceFactor={1.5}
+                position={[0, 0.024, 0.002]}
+                style={{
+                  color: '#6b7280',
+                  fontFamily: 'monospace',
+                  fontSize: '4px',
+                  fontWeight: 'bold',
+                  whiteSpace: 'nowrap',
+                  pointerEvents: 'none',
+                  userSelect: 'none',
+                }}
+              >
+                FF ►►
+              </Html>
+            </group>
+
+            {/* STOP/PAUSE */}
+            <group position={[0.22, -0.09, 0.01]}>
+              <mesh castShadow>
+                <boxGeometry args={[0.045, 0.03, 0.012]} />
+                <meshStandardMaterial color="#1a1c22" roughness={0.6} />
+              </mesh>
+              <Html
+                transform
+                distanceFactor={1.5}
+                position={[0, 0.024, 0.002]}
+                style={{
+                  color: '#6b7280',
+                  fontFamily: 'monospace',
+                  fontSize: '4px',
+                  fontWeight: 'bold',
+                  whiteSpace: 'nowrap',
+                  pointerEvents: 'none',
+                  userSelect: 'none',
+                }}
+              >
+                STOP ■
+              </Html>
+            </group>
+
+            {/* Tiny VCR tape light display */}
+            <group position={[0.31, -0.09, 0.01]}>
+              <mesh position={[0, 0, 0.002]} castShadow>
+                <sphereGeometry args={[0.007, 8, 8]} />
+                <meshStandardMaterial 
+                  color="#f59e0b" 
+                  emissive="#f59e0b" 
+                  emissiveIntensity={0.8}
+                />
+              </mesh>
+              <Html
+                transform
+                distanceFactor={1.5}
+                position={[0, 0.022, 0.002]}
+                style={{
+                  color: '#6b7280',
+                  fontFamily: 'monospace',
+                  fontSize: '3px',
+                  whiteSpace: 'nowrap',
+                  pointerEvents: 'none',
+                  userSelect: 'none',
+                }}
+              >
+                TAPE IN
+              </Html>
+            </group>
+
+            {/* --- TV CONTROLS (POWER, VOL, CH) --- */}
+            {/* Power Button & LED */}
+            <group position={[-0.43, -0.01, 0.015]}>
+              <mesh castShadow>
+                <boxGeometry args={[0.055, 0.032, 0.01]} />
                 <meshStandardMaterial color="#1a1c23" roughness={0.5} />
               </mesh>
               {/* LED Power indicator */}
-              <mesh position={[-0.048, 0, 0.01]} castShadow>
-                <sphereGeometry args={[0.008, 8, 8]} />
+              <mesh position={[-0.042, 0, 0.006]} castShadow>
+                <sphereGeometry args={[0.007, 8, 8]} />
                 <meshStandardMaterial 
                   color="#10b981" 
                   emissive="#10b981" 
@@ -298,48 +483,46 @@ export const MemoryTelevision = () => {
               <Html
                 transform
                 distanceFactor={1.5}
-                position={[0, 0.026, 0.002]}
+                position={[0, 0.025, 0.002]}
                 style={{
-                  color: '#71717a',
+                  color: '#4b5563',
                   fontFamily: 'monospace',
-                  fontSize: '5px',
+                  fontSize: '4.5px',
                   fontWeight: 'bold',
                   whiteSpace: 'nowrap',
                   pointerEvents: 'none',
                   userSelect: 'none',
-                  transform: 'translate(-50%, -50%)',
                 }}
               >
                 POWER
               </Html>
             </group>
 
-            {/* Menu Buttons (sleek rectangular plastic blocks with labels) */}
+            {/* Stacked VOL / CH buttons on the right side */}
             {/* Volume Pair */}
-            <group position={[-0.06, -0.04, 0.02]}>
+            <group position={[0.43, 0.04, 0.015]}>
               {/* Vol - */}
-              <mesh position={[-0.022, 0, 0]} castShadow>
-                <boxGeometry args={[0.032, 0.028, 0.012]} />
+              <mesh position={[-0.018, 0, 0]} castShadow>
+                <boxGeometry args={[0.028, 0.024, 0.01]} />
                 <meshStandardMaterial color="#1a1c23" roughness={0.6} />
               </mesh>
               {/* Vol + */}
-              <mesh position={[0.022, 0, 0]} castShadow>
-                <boxGeometry args={[0.032, 0.028, 0.012]} />
+              <mesh position={[0.018, 0, 0]} castShadow>
+                <boxGeometry args={[0.028, 0.024, 0.01]} />
                 <meshStandardMaterial color="#1a1c23" roughness={0.6} />
               </mesh>
               <Html
                 transform
                 distanceFactor={1.5}
-                position={[0, 0.026, 0.002]}
+                position={[0, 0.024, 0.002]}
                 style={{
-                  color: '#71717a',
+                  color: '#4b5563',
                   fontFamily: 'monospace',
-                  fontSize: '5px',
+                  fontSize: '4.2px',
                   fontWeight: 'bold',
                   whiteSpace: 'nowrap',
                   pointerEvents: 'none',
                   userSelect: 'none',
-                  transform: 'translate(-50%, -50%)',
                 }}
               >
                 VOLUME
@@ -347,132 +530,35 @@ export const MemoryTelevision = () => {
             </group>
 
             {/* Channel Pair */}
-            <group position={[0.06, -0.04, 0.02]}>
+            <group position={[0.43, -0.05, 0.015]}>
               {/* Ch - */}
-              <mesh position={[-0.022, 0, 0]} castShadow>
-                <boxGeometry args={[0.032, 0.028, 0.012]} />
+              <mesh position={[-0.018, 0, 0]} castShadow>
+                <boxGeometry args={[0.028, 0.024, 0.01]} />
                 <meshStandardMaterial color="#1a1c23" roughness={0.6} />
               </mesh>
               {/* Ch + */}
-              <mesh position={[0.022, 0, 0]} castShadow>
-                <boxGeometry args={[0.032, 0.028, 0.012]} />
+              <mesh position={[0.018, 0, 0]} castShadow>
+                <boxGeometry args={[0.028, 0.024, 0.01]} />
                 <meshStandardMaterial color="#1a1c23" roughness={0.6} />
               </mesh>
               <Html
                 transform
                 distanceFactor={1.5}
-                position={[0, 0.026, 0.002]}
+                position={[0, 0.024, 0.002]}
                 style={{
-                  color: '#71717a',
+                  color: '#4b5563',
                   fontFamily: 'monospace',
-                  fontSize: '5px',
+                  fontSize: '4.2px',
                   fontWeight: 'bold',
                   whiteSpace: 'nowrap',
                   pointerEvents: 'none',
                   userSelect: 'none',
-                  transform: 'translate(-50%, -50%)',
                 }}
               >
                 CHANNEL
               </Html>
             </group>
 
-            {/* Inset Front RCA Input Jack Panel */}
-            <group position={[0.26, -0.04, 0.01]}>
-              {/* Inset background panel */}
-              <mesh castShadow>
-                <boxGeometry args={[0.22, 0.06, 0.01]} />
-                <meshStandardMaterial color="#08080a" roughness={0.9} />
-              </mesh>
-
-              {/* RCA ports (Yellow, White, Red cylinders) */}
-              {/* Yellow (Video) */}
-              <group position={[-0.065, 0, 0.005]}>
-                <mesh rotation={[Math.PI / 2, 0, 0]} castShadow>
-                  <cylinderGeometry args={[0.016, 0.016, 0.012, 12]} />
-                  <meshStandardMaterial color="#eab308" roughness={0.2} metalness={0.1} />
-                </mesh>
-                {/* Silver outer metal ring */}
-                <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, 0, 0.006]}>
-                  <cylinderGeometry args={[0.01, 0.01, 0.003, 12]} />
-                  <meshStandardMaterial color="#c0c0c0" metalness={0.9} roughness={0.1} />
-                </mesh>
-                <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, 0, 0.008]}>
-                  <cylinderGeometry args={[0.005, 0.005, 0.002, 8]} />
-                  <meshStandardMaterial color="#000000" />
-                </mesh>
-              </group>
-
-              {/* White (Audio L) */}
-              <group position={[0, 0, 0.005]}>
-                <mesh rotation={[Math.PI / 2, 0, 0]} castShadow>
-                  <cylinderGeometry args={[0.016, 0.016, 0.012, 12]} />
-                  <meshStandardMaterial color="#e2e8f0" roughness={0.3} metalness={0.1} />
-                </mesh>
-                {/* Silver outer ring */}
-                <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, 0, 0.006]}>
-                  <cylinderGeometry args={[0.01, 0.01, 0.003, 12]} />
-                  <meshStandardMaterial color="#c0c0c0" metalness={0.9} roughness={0.1} />
-                </mesh>
-                <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, 0, 0.008]}>
-                  <cylinderGeometry args={[0.005, 0.005, 0.002, 8]} />
-                  <meshStandardMaterial color="#000000" />
-                </mesh>
-              </group>
-
-              {/* Red (Audio R) */}
-              <group position={[0.065, 0, 0.005]}>
-                <mesh rotation={[Math.PI / 2, 0, 0]} castShadow>
-                  <cylinderGeometry args={[0.016, 0.016, 0.012, 12]} />
-                  <meshStandardMaterial color="#ef4444" roughness={0.2} metalness={0.1} />
-                </mesh>
-                {/* Silver outer ring */}
-                <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, 0, 0.006]}>
-                  <cylinderGeometry args={[0.01, 0.01, 0.003, 12]} />
-                  <meshStandardMaterial color="#c0c0c0" metalness={0.9} roughness={0.1} />
-                </mesh>
-                <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, 0, 0.008]}>
-                  <cylinderGeometry args={[0.005, 0.005, 0.002, 8]} />
-                  <meshStandardMaterial color="#000000" />
-                </mesh>
-              </group>
-
-              {/* RCA Labels */}
-              <Html
-                transform
-                distanceFactor={1.5}
-                position={[-0.065, 0.04, 0.005]}
-                style={{
-                  color: '#71717a',
-                  fontFamily: 'monospace',
-                  fontSize: '4.5px',
-                  fontWeight: 'bold',
-                  whiteSpace: 'nowrap',
-                  pointerEvents: 'none',
-                  userSelect: 'none',
-                  transform: 'translate(-50%, -50%)',
-                }}
-              >
-                VIDEO
-              </Html>
-              <Html
-                transform
-                distanceFactor={1.5}
-                position={[0.032, 0.04, 0.005]}
-                style={{
-                  color: '#71717a',
-                  fontFamily: 'monospace',
-                  fontSize: '4.5px',
-                  fontWeight: 'bold',
-                  whiteSpace: 'nowrap',
-                  pointerEvents: 'none',
-                  userSelect: 'none',
-                  transform: 'translate(-50%, -50%)',
-                }}
-              >
-                AUDIO L/R
-              </Html>
-            </group>
           </group>
 
           {/* --- RE-PROJECTED HTML SCREEN GLASS & CONTAINER (Centered X, raised Y) --- */}

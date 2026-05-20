@@ -250,174 +250,645 @@ body, html, #root {
   100% { opacity: 0.99; }
 }
 
-/* DOS Screen Header */
-.crt-screen-header {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.8rem;
-  color: var(--crt-green);
-  text-shadow: 0 0 4px rgba(51, 255, 51, 0.6);
-  border-bottom: 1px solid rgba(51, 255, 51, 0.2);
-  padding-bottom: 0.5rem;
-  letter-spacing: 0.1em;
-}
+/* ==========================================================================
+   --- CRT TV GUIDE SCREEN STYLING (LATE 90S / EARLY 2000S RETRO CABLE) ---
+   ========================================================================== */
 
-/* DOS Channels List */
-.crt-channels-list {
+.tv-guide-container {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  background-color: #0a0f2e;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  margin: auto 0;
+  font-family: 'VT323', monospace;
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  text-shadow: 0 0 2px rgba(255, 255, 255, 0.3);
+  overflow: hidden;
+  box-sizing: border-box;
+  border: 2px solid #1c2b64;
 }
 
-.crt-channel-item {
+/* TOP DISPLAY BLOCK: INFO PANEL & MEDIA PREVIEW */
+.tv-guide-top-panel {
+  height: 140px;
   display: flex;
-  align-items: center;
-  gap: 1.25rem;
-  padding: 0.5rem 0.75rem;
-  border-radius: 4px;
-  cursor: pointer;
-  border: 1px solid transparent;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  color: var(--text-secondary);
-  font-family: 'Share Tech Mono', monospace;
+  border-bottom: 2px solid #1c2b64;
+  box-sizing: border-box;
 }
 
-.crt-channel-num {
-  font-size: 0.8rem;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 0.1rem 0.4rem;
-  border-radius: 2px;
-  color: var(--text-muted);
-  transition: all 0.2s ease;
+/* Left channel information box */
+.tv-guide-info-box {
+  width: 55%;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  border-right: 2px solid #1c2b64;
+  background-color: #0a0f2e;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
-.crt-channel-name {
-  font-size: 1.05rem;
+.tv-guide-info-active, .tv-guide-info-welcome {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+.tv-guide-info-channel-label {
+  color: #f5c518;
+  font-size: 17px;
+  font-weight: bold;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
-/* Hover States for Channels */
-.crt-channel-item:hover {
-  background: rgba(51, 255, 51, 0.05);
-  border-color: rgba(51, 255, 51, 0.2);
-  color: var(--crt-green);
-  text-shadow: 0 0 5px rgba(51, 255, 51, 0.6);
-  padding-left: 1.25rem;
+.tv-guide-info-program-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: -2px;
 }
 
-.crt-channel-item:hover .crt-channel-num {
-  border-color: rgba(51, 255, 51, 0.4);
-  color: var(--crt-green);
-  background: rgba(51, 255, 51, 0.1);
-}
-
-.crt-channel-item.active {
-  background: rgba(51, 255, 51, 0.1);
-  border-color: rgba(51, 255, 51, 0.5);
-  color: var(--crt-green);
-  text-shadow: 0 0 6px rgba(51, 255, 51, 0.8);
+.tv-guide-info-program-title {
+  font-size: 19px;
   font-weight: bold;
+  color: #ffffff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.crt-channel-item.active .crt-channel-num {
-  border-color: var(--crt-green);
-  color: #000;
-  background: var(--crt-green);
+.tv-guide-rating-badge {
+  background-color: #f5c518;
+  color: #000000;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 0px 4px;
+  border-radius: 2px;
+  line-height: 1.2;
 }
 
-/* CRT Screen Footer */
-.crt-screen-footer {
-  font-size: 0.7rem;
-  color: var(--text-muted);
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-  padding-top: 0.5rem;
-  display: flex;
-  justify-content: space-between;
-  letter-spacing: 0.05em;
+.tv-guide-info-airtime {
+  color: #d0d8ff;
+  font-size: 14px;
+  margin-top: -4px;
 }
 
-.crt-blinking-cursor {
-  display: inline-block;
-  width: 8px;
-  height: 12px;
-  background: var(--crt-green);
-  margin-left: 4px;
-  animation: crt-blink 1s steps(2, start) infinite;
-  box-shadow: 0 0 4px var(--crt-green);
+.tv-guide-info-tagline {
+  color: #a0a8df;
+  font-size: 13px;
+  line-height: 1.2;
+  margin-top: 2px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-@keyframes crt-blink {
-  to { visibility: hidden; }
+/* Welcome screen text style */
+.tv-guide-welcome-title {
+  color: #f5c518;
+  font-size: 20px;
+  font-weight: bold;
+  letter-spacing: 0.06em;
 }
 
-/* TV Screen in World View */
-.crt-world-screen {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+.tv-guide-welcome-subtitle {
+  color: #d0d8ff;
+  font-size: 14px;
+  letter-spacing: 0.08em;
+}
+
+.tv-guide-welcome-desc {
+  color: #a0a8df;
+  font-size: 13px;
+  line-height: 1.25;
+  margin: 4px 0;
+}
+
+.tv-guide-welcome-footer {
+  color: #2b3b7c;
+  font-size: 11px;
+  text-shadow: none;
+  font-family: monospace;
+}
+
+/* Right media preview box */
+.tv-guide-preview-box {
+  width: 45%;
+  position: relative;
+  overflow: hidden;
+  background-color: #000000;
+  box-sizing: border-box;
+}
+
+.tv-guide-video {
+  width: 100%;
   height: 100%;
-  color: var(--crt-green);
-  text-shadow: 0 0 4px rgba(51, 255, 51, 0.5);
+  object-fit: cover;
 }
 
-.crt-world-telemetry {
-  margin: auto 0;
-  text-align: center;
-  font-family: 'Share Tech Mono', monospace;
-}
-
-.crt-world-status {
-  font-size: 1.4rem;
-  letter-spacing: 0.1em;
-  margin-bottom: 0.5rem;
-  text-transform: uppercase;
-}
-
-.crt-world-signal {
-  font-size: 0.75rem;
-  color: var(--text-secondary);
+.tv-guide-preview-fallback {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
 }
 
-.crt-signal-bar {
-  display: inline-block;
-  width: 4px;
-  height: 10px;
-  background: rgba(255, 255, 255, 0.1);
+.tv-guide-preview-noise {
+  opacity: 0.22;
+  z-index: 2;
 }
 
-.crt-signal-bar.active {
-  background: var(--crt-green);
-  box-shadow: 0 0 3px var(--crt-green);
+.tv-guide-glow-pulse {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  mix-blend-mode: screen;
+  animation: pulse-glow-anim 2.5s infinite alternate;
+  pointer-events: none;
+  z-index: 1;
 }
 
-.crt-return-btn {
-  background: rgba(51, 255, 51, 0.1);
-  border: 1px solid var(--crt-green);
-  color: var(--crt-green);
-  font-family: inherit;
-  font-size: 0.8rem;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  border-radius: 4px;
-  letter-spacing: 0.1em;
-  transition: all 0.2s ease;
+@keyframes pulse-glow-anim {
+  0% { opacity: 0.2; }
+  100% { opacity: 0.75; }
+}
+
+.tv-guide-scanline-sweep {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  margin-top: 1rem;
-  box-shadow: 0 0 8px rgba(51, 255, 51, 0.15);
+  height: 2px;
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
+  animation: sweep-anim 4.5s linear infinite;
+  pointer-events: none;
+  z-index: 3;
 }
 
-.crt-return-btn:hover {
-  background: var(--crt-green);
-  color: #000;
+@keyframes sweep-anim {
+  0% { top: 0%; }
+  100% { top: 100%; }
+}
+
+/* Pure CSS Retro TV Test Pattern Card */
+.smpte-color-bars {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+.smpte-top-row {
+  height: 65%;
+  display: flex;
+}
+
+.smpte-middle-row {
+  height: 10%;
+  display: flex;
+}
+
+.smpte-bottom-row {
+  height: 25%;
+  display: flex;
+}
+
+.smpte-color-bars .bar {
+  flex: 1;
+  height: 100%;
+}
+
+.bar.white { background-color: #f0f0f0; }
+.bar.yellow { background-color: #f5c518; }
+.bar.cyan { background-color: #00a2e8; }
+.bar.green { background-color: #22b14c; }
+.bar.magenta { background-color: #a349a4; }
+.bar.red { background-color: #ed1c24; }
+.bar.blue { background-color: #3f48cc; }
+
+.bar.black-1 { background-color: #0d0d0d; }
+.bar.black-2 { background-color: #000000; }
+.bar.black-3 { background-color: #121212; }
+.bar.white-block { background-color: #e5e5e5; }
+.bar.blue-block { background-color: #2a319c; }
+
+.bar.dark-blue { background-color: #0a1138; }
+.bar.white-test { background-color: #ffffff; }
+.bar.dark-purple { background-color: #180530; }
+.bar.gray-1 { background-color: #1a1a1a; }
+.bar.gray-2 { background-color: #262626; }
+.bar.gray-3 { background-color: #333333; }
+
+.smpte-text {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #f5c518;
+  padding: 1px 6px;
+  font-size: 11px;
   font-weight: bold;
-  box-shadow: 0 0 15px rgba(51, 255, 51, 0.4);
+  border-radius: 2px;
+  border: 1px solid #1c2b64;
+  font-family: monospace;
+  letter-spacing: 0.12em;
+  pointer-events: none;
+  z-index: 4;
+}
+
+/* MIDDLE ROW: RUNNING CLOCK AND TIME SLOTS */
+.tv-guide-time-bar {
+  height: 28px;
+  display: flex;
+  align-items: center;
+  background-color: #0d1f6e;
+  border-bottom: 2px solid #1c2b64;
+  font-size: 16px;
+  font-weight: bold;
+  box-sizing: border-box;
+}
+
+.tv-guide-clock-cell {
+  width: 80px;
+  text-align: center;
+  color: #f5c518;
+  border-right: 2px solid #1c2b64;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.tv-guide-slots-container {
+  display: flex;
+  flex: 1;
+  height: 100%;
+}
+
+.tv-guide-time-slot {
+  width: 33.333%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 2px solid #1c2b64;
+  font-size: 14px;
+  color: #f5c518;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.tv-guide-time-slot:last-child {
+  border-right: none;
+}
+
+/* BOTTOM GRID: SCROLLABLE CHANNELS LIST */
+.tv-guide-channels-grid {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  background-color: #0a0f2e;
+  box-sizing: border-box;
+}
+
+.tv-guide-channels-grid::-webkit-scrollbar {
+  width: 0px; /* Hide scrollbars inside small CRT */
+}
+
+.tv-guide-channel-row {
+  height: 48px;
+  display: flex;
+  align-items: stretch;
+  border-bottom: 2px solid #1c2b64;
+  cursor: pointer;
+  box-sizing: border-box;
+  color: #ffffff;
+  transition: background-color 0.1s ease;
+}
+
+.tv-guide-channel-row.active {
+  background-color: #2850c8;
+}
+
+.tv-guide-channel-label-cell {
+  width: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-right: 2px solid #1c2b64;
+  background-color: #0d1f6e;
+  font-weight: bold;
+  line-height: 1.1;
+  box-sizing: border-box;
+}
+
+.tv-guide-channel-row.active .tv-guide-channel-label-cell {
+  background-color: #1a3a8f;
+}
+
+.tv-guide-ch-num {
+  color: #f5c518;
+  font-size: 16px;
+}
+
+.tv-guide-ch-abbrev {
+  color: #ffffff;
+  font-size: 13px;
+}
+
+.tv-guide-programs-cells-row {
+  display: flex;
+  flex: 1;
+  align-items: stretch;
+  box-sizing: border-box;
+}
+
+.tv-guide-program-cell {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+  border-right: 2px solid #1c2b64;
+  box-sizing: border-box;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: 15px;
+  position: relative;
+}
+
+.tv-guide-program-cell:last-child {
+  border-right: none;
+}
+
+.tv-guide-program-title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tv-guide-program-title-text {
+  font-size: 15px;
+  font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tv-guide-cell-rating {
+  font-size: 11px;
+  color: #f5c518;
+  border: 1px solid #f5c518;
+  padding: 0px 2px;
+  border-radius: 2px;
+  font-weight: bold;
+  scale: 0.85;
+}
+
+.tv-guide-channel-row.active .tv-guide-cell-rating {
+  border-color: #ffffff;
+  color: #ffffff;
+}
+
+.tv-guide-chevron {
+  color: #f5c518;
+  font-size: 11px;
+  font-weight: bold;
+  margin-left: auto;
+  padding-left: 4px;
+}
+
+.tv-guide-channel-row.active .tv-guide-chevron {
+  color: #ffffff;
+}
+
+/* --- CRT WORLD SCREEN: DIAGNOSTIC CABLE TV GUIDE STYLE --- */
+.crt-world-screen {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  background-color: #0a0f2e;
+  display: flex;
+  flex-direction: column;
+  font-family: 'VT323', monospace;
+  color: #ffffff;
+  box-sizing: border-box;
+  border: 2px solid #1c2b64;
+  overflow: hidden;
+  justify-content: space-between;
+  text-shadow: 0 0 2px rgba(255, 255, 255, 0.3);
+}
+
+.crt-world-header-bar {
+  height: 26px;
+  background-color: #0d1f6e;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 12px;
+  border-bottom: 2px solid #1c2b64;
+  box-sizing: border-box;
+}
+
+.crt-world-header-title {
+  color: #f5c518;
+  font-size: 16px;
+  font-weight: bold;
+  letter-spacing: 0.08em;
+}
+
+.crt-world-header-channel {
+  color: #f5c518;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.crt-world-info-container {
+  flex: 1;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+.crt-world-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 2px;
+}
+
+.crt-world-ch-badge {
+  background-color: #f5c518;
+  color: #000000;
+  font-size: 13px;
+  font-weight: bold;
+  padding: 0px 6px;
+  border-radius: 2px;
+  line-height: 1.3;
+}
+
+.crt-world-main-title {
+  font-size: 21px;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+  color: #ffffff;
+}
+
+.crt-world-meta-box {
+  background-color: rgba(13, 31, 110, 0.3);
+  border: 1px solid #1c2b64;
+  padding: 6px 10px;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 13px;
+}
+
+.crt-meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.crt-meta-row .meta-label {
+  color: #a0a8df;
+  font-weight: bold;
+}
+
+.crt-world-rating-label {
+  color: #f5c518;
+  font-weight: bold;
+}
+
+.crt-signal-status-text {
+  color: #22b14c;
+  font-weight: bold;
+  text-shadow: 0 0 3px rgba(34, 177, 76, 0.5);
+}
+
+.crt-world-signal-bar-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  margin: 2px 0;
+}
+
+.crt-world-signal-bar-row .signal-label {
+  color: #a0a8df;
+}
+
+.crt-signal-meter {
+  display: flex;
+  gap: 4px;
+}
+
+.crt-signal-block {
+  width: 6px;
+  height: 12px;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.crt-signal-block.active {
+  background-color: #22b14c;
+  box-shadow: 0 0 4px rgba(34, 177, 76, 0.6);
+}
+
+.crt-world-telemetry-scroll {
+  font-size: 12px;
+  color: #8892bf;
+  line-height: 1.3;
+  font-family: monospace;
+  border-top: 1px solid rgba(28, 43, 100, 0.4);
+  padding-top: 4px;
+  text-transform: uppercase;
+}
+
+.crt-cable-return-btn {
+  background-color: #1a3a8f;
+  border: 1px solid #f5c518;
+  color: #ffffff;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  width: 100%;
+  box-shadow: 0 0 6px rgba(26, 58, 143, 0.3);
+  margin-top: 4px;
+  letter-spacing: 0.05em;
+}
+
+.crt-cable-return-btn:hover {
+  background-color: #2850c8;
+  border-color: #ffffff;
+  text-shadow: 0 0 2px #ffffff;
+  box-shadow: 0 0 10px rgba(40, 80, 200, 0.5);
+}
+
+.crt-world-footer-ticker {
+  height: 24px;
+  background-color: #05081a;
+  display: flex;
+  align-items: center;
+  border-top: 2px solid #1c2b64;
+  padding: 0 8px;
+  overflow: hidden;
+  box-sizing: border-box;
+  font-size: 11px;
+}
+
+.crt-world-footer-ticker .ticker-label {
+  color: #f5c518;
+  font-weight: bold;
+  margin-right: 8px;
+  white-space: nowrap;
+}
+
+.crt-world-footer-ticker .ticker-text-scroll {
+  color: #a0a8df;
+  font-family: monospace;
+  white-space: nowrap;
+  animation: ticker-marquee-anim 16s linear infinite;
+  display: inline-block;
+}
+
+@keyframes ticker-marquee-anim {
+  0% { transform: translate3d(100%, 0, 0); }
+  100% { transform: translate3d(-100%, 0, 0); }
+}
+
+/* GENERAL MICRO-ANIMATIONS */
+.animate-fade-in {
+  animation: fade-in-anim 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fade-in-anim {
+  from { opacity: 0; transform: translateY(2px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* --- FULLSCREEN STATIC GLITCH TRANSITION --- */
@@ -494,7 +965,7 @@ body, html, #root {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: radial-gradient(circle at 50% 50%, rgba(0,0,0,0) 20%, rgba(5,5,8,0.92) 80%);
+  background: radial-gradient(circle at 50% 50%, rgba(0,0,0,0) 30%, rgba(5,5,8,0.55) 100%);
   pointer-events: none;
   z-index: 2;
 }

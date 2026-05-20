@@ -20,7 +20,15 @@ export interface WorldData {
   backgroundColor: string;
   ambientIntensity: number;
   artworks: ArtworkData[];
+  // TV Guide fields
+  guideAbbrev: string;   // Short network label, e.g. "N.N.", "VHS", "P&W"
+  tagline: string;       // One-line emotional description
+  previewVideo: string;  // Path to looping preview video (put in public/videos/). Empty = CSS fallback.
+  previewColor: string;  // CSS color shown when no video is set
+  airTime: string;       // Fake broadcast time for the guide
+  rating: string;        // Content rating badge, e.g. "TV-MA", "NR"
 }
+
 
 export const worlds: Record<string, WorldData> = {
   'nostalgia-nihilism': {
@@ -32,6 +40,12 @@ export const worlds: Record<string, WorldData> = {
     fogColor: '#0a0507',
     backgroundColor: '#050203',
     ambientIntensity: 0.15,
+    guideAbbrev: 'N.N.',
+    tagline: 'A monument to forgotten digital dust.',
+    previewVideo: '',          // Drop nn-preview.mp4 in public/videos/ when ready
+    previewColor: '#1a0208',   // Deep crimson — fallback when no video
+    airTime: '9:00 PM',
+    rating: 'TV-MA',
     artworks: [
       {
         id: 'nn-1',
@@ -74,6 +88,12 @@ export const worlds: Record<string, WorldData> = {
     fogColor: '#0c0714',
     backgroundColor: '#05030a',
     ambientIntensity: 0.25,
+    guideAbbrev: 'VHS',
+    tagline: 'Nostalgic tape-loop memory horizons.',
+    previewVideo: '',          // Drop vhs-preview.mp4 in public/videos/ when ready
+    previewColor: '#130820',   // Deep purple — fallback when no video
+    airTime: '11:00 PM',
+    rating: 'TV-14',
     artworks: [
       {
         id: 'vd-1',
@@ -116,6 +136,12 @@ export const worlds: Record<string, WorldData> = {
     fogColor: '#040d0a',
     backgroundColor: '#020605',
     ambientIntensity: 0.2,
+    guideAbbrev: 'P&W',
+    tagline: 'Ethereal organic crystal dimensions.',
+    previewVideo: '',          // Drop pw-preview.mp4 in public/videos/ when ready
+    previewColor: '#031208',   // Deep emerald — fallback when no video
+    airTime: '12:00 AM',
+    rating: 'NR',
     artworks: [
       {
         id: 'pw-1',

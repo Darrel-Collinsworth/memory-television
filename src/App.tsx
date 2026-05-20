@@ -26,10 +26,12 @@ export default function App() {
     : [0.0012, 0.0012];
 
   // Dynamic bloom intensity during transition peak
-  const bloomIntensity = transitioning ? 2.5 : 0.45;
+  // Hub is bright — dial back bloom & vignette so they don't crush the pastels
+  const bloomIntensity = transitioning ? 2.5 : isHome ? 0.18 : 0.45;
+  const vignetteAmount = transitioning ? 1.5 : isHome ? 0.55 : 1.1;
 
   return (
-    <div style={{ width: '100vw', height: '100vh', position: 'relative', overflow: 'hidden', background: '#050508' }}>
+    <div style={{ width: '100vw', height: '100vh', position: 'relative', overflow: 'hidden', background: isHome ? '#ccdcea' : '#050508' }}>
       
       {/* --- R3F FULLSCREEN 3D CANVAS --- */}
       <div className="canvas-container">
@@ -43,7 +45,7 @@ export default function App() {
           }}
         >
           <Suspense fallback={null}>
-            <color attach="background" args={[isHome ? '#050508' : worlds[currentWorld].fogColor]} />
+            <color attach="background" args={[isHome ? '#ccdcea' : worlds[currentWorld].fogColor]} />
 
             {/* Core Scene Experience */}
             <Experience />
@@ -58,10 +60,10 @@ export default function App() {
               />
               <ChromaticAberration offset={aberrationOffset} />
               <Noise opacity={0.03} />
-              <Vignette 
-                offset={0.1} 
-                darkness={transitioning ? 1.5 : 1.1} 
-                eskil={false} 
+              <Vignette
+                offset={isHome ? 0.25 : 0.1}
+                darkness={vignetteAmount}
+                eskil={false}
               />
             </EffectComposer>
           </Suspense>
@@ -131,7 +133,10 @@ export default function App() {
           <div className="hud-instructions">
             {isHome ? (
               <>
-                Look down at the <strong>exploratory CRT companion</strong> in your hands. Click a memory channel on the television screen to transition into an immersive artist-world.
+                {tvRaised
+                  ? <>Look down at the <strong>CRT companion</strong> in your hands. Click a channel to enter a world — or <strong>lower the CRT</strong> to look around this memory space.</>
+                  : <>Move your mouse to <strong>look around</strong> the memory sky. Raise the CRT to browse channels and enter a world.</>
+                }
               </>
             ) : (
               <>

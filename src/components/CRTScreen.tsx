@@ -1,14 +1,12 @@
-import { useState } from 'react';
 import { useWorldStore, type WorldType } from '../store/useWorldStore';
 import { worlds } from '../data/worlds';
+import { TVGuideScreen } from './TVGuideScreen';
 
 export const CRTScreen = () => {
   const currentWorld = useWorldStore((state) => state.currentWorld);
   const transitioning = useWorldStore((state) => state.transitioning);
   const transitionTo = useWorldStore((state) => state.transitionTo);
-  const [hoveredChannel, setHoveredChannel] = useState<string | null>(null);
 
-  // Trigger state transitions on select
   const handleSelectChannel = (channelId: WorldType) => {
     if (transitioning) return;
     transitionTo(channelId);
@@ -30,88 +28,77 @@ export const CRTScreen = () => {
         )}
 
         {isHome ? (
-          /* --- HOME MODE: TERMINAL MENU --- */
-          <>
-            <div className="crt-screen-header">
-              <span>SYS.CRT.MONITOR v1.89</span>
-              <span>BATTERY: 98%</span>
-            </div>
-
-            <div className="crt-channels-list">
-              {Object.values(worlds).map((world) => (
-                <div
-                  key={world.id}
-                  className={`crt-channel-item ${hoveredChannel === world.id ? 'active' : ''}`}
-                  onMouseEnter={() => setHoveredChannel(world.id)}
-                  onMouseLeave={() => setHoveredChannel(null)}
-                  onClick={() => handleSelectChannel(world.id)}
-                >
-                  <span className="crt-channel-num">{world.channel}</span>
-                  <span className="crt-channel-name">{world.title}</span>
-                </div>
-              ))}
-            </div>
-
-            <div className="crt-screen-footer">
-              <span>MEMORY_TV:/$ SELECT CHANNEL<span className="crt-blinking-cursor" /></span>
-              <span>LOC: SURREAL_ARCHIVE</span>
-            </div>
-          </>
+          /* --- HOME MODE: 90S CABLE TV GUIDE SCREEN --- */
+          <TVGuideScreen />
         ) : (
-          /* --- WORLD MODE: DIAGNOSTIC TELEMETRY --- */
-          <div className="crt-world-screen">
-            <div className="crt-screen-header" style={{ color: worlds[currentWorld].themeColor, borderBottomColor: worlds[currentWorld].themeColor + '44' }}>
-              <span>SIGNAL SOURCE: EMITTED</span>
-              <span>{worlds[currentWorld].channel}</span>
+          /* --- WORLD MODE: 2000S CABLE TV "NOW AIRING" DIAGNOSTIC --- */
+          <div className="crt-world-screen animate-fade-in">
+            {/* Cable style header */}
+            <div className="crt-world-header-bar">
+              <span className="crt-world-header-title">NOW AIRING</span>
+              <span className="crt-world-header-channel">{worlds[currentWorld].channel}</span>
             </div>
 
-            <div className="crt-world-telemetry" style={{ color: worlds[currentWorld].themeColor }}>
-              <div className="crt-world-status">
-                {worlds[currentWorld].title}
-              </div>
-              <div className="crt-world-signal">
-                <span>SIGNAL LOCK: </span>
-                <span className="crt-signal-bar active" style={{ backgroundColor: worlds[currentWorld].themeColor }} />
-                <span className="crt-signal-bar active" style={{ backgroundColor: worlds[currentWorld].themeColor }} />
-                <span className="crt-signal-bar active" style={{ backgroundColor: worlds[currentWorld].themeColor }} />
-                <span className="crt-signal-bar active" style={{ backgroundColor: worlds[currentWorld].themeColor }} />
-                <span className="crt-signal-bar active" style={{ backgroundColor: worlds[currentWorld].themeColor }} />
-                <span className="crt-signal-bar active" style={{ backgroundColor: worlds[currentWorld].themeColor }} />
-                <span className="crt-signal-bar active" style={{ backgroundColor: worlds[currentWorld].themeColor }} />
-                <span style={{ marginLeft: '4px', fontSize: '0.65rem', color: '#fff' }}>DECODED</span>
+            {/* Main content box */}
+            <div className="crt-world-info-container">
+              <div className="crt-world-title-row">
+                <span className="crt-world-ch-badge">
+                  {worlds[currentWorld].guideAbbrev}
+                </span>
+                <span className="crt-world-main-title">
+                  {worlds[currentWorld].title}
+                </span>
               </div>
 
-              <div style={{ marginTop: '1.25rem', fontSize: '0.65rem', color: '#888', textAlign: 'center', fontFamily: 'monospace', textTransform: 'uppercase', display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
-                <div>PORTAL_HZ: 894.22Mhz</div>
-                <div>VECTOR_LOCK: X: 1.25 Y: 3.44 Z: -2.31</div>
-                <div>BANDWIDTH: 4.8 GB/S</div>
+              <div className="crt-world-meta-box">
+                <div className="crt-meta-row">
+                  <span className="meta-label">RATING:</span>
+                  <span className="crt-world-rating-label">{worlds[currentWorld].rating}</span>
+                </div>
+                <div className="crt-meta-row">
+                  <span className="meta-label">AIRTIME:</span>
+                  <span>{worlds[currentWorld].airTime}</span>
+                </div>
+                <div className="crt-meta-row">
+                  <span className="meta-label">STATUS:</span>
+                  <span className="crt-signal-status-text">DECODED & SECURED</span>
+                </div>
+              </div>
+
+              {/* Fake Interactive TV guide signal status */}
+              <div className="crt-world-signal-bar-row">
+                <span className="signal-label">SIGNAL STRENGTH:</span>
+                <div className="crt-signal-meter">
+                  <span className="crt-signal-block active" />
+                  <span className="crt-signal-block active" />
+                  <span className="crt-signal-block active" />
+                  <span className="crt-signal-block active" />
+                  <span className="crt-signal-block active" />
+                  <span className="crt-signal-block active" />
+                  <span className="crt-signal-block active" />
+                </div>
+              </div>
+
+              <div className="crt-world-telemetry-scroll">
+                <div>PORTAL RES: VECTOR RESOLVED</div>
+                <div>DEPTH RATIO: LOCK ON ACTIVE</div>
+                <div>BANDWIDTH: 4.8 GB/S [MAX]</div>
               </div>
 
               <button
-                className="crt-return-btn"
-                style={{ 
-                  borderColor: worlds[currentWorld].themeColor, 
-                  color: worlds[currentWorld].themeColor, 
-                  boxShadow: `0 0 10px ${worlds[currentWorld].themeColor}33`,
-                  background: `${worlds[currentWorld].themeColor}15`
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = worlds[currentWorld].themeColor;
-                  e.currentTarget.style.color = '#000';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = `${worlds[currentWorld].themeColor}15`;
-                  e.currentTarget.style.color = worlds[currentWorld].themeColor;
-                }}
+                className="crt-cable-return-btn"
                 onClick={() => handleSelectChannel('home')}
               >
-                RETURN TO TV
+                ◀ RETURN TO GUIDE (MENU)
               </button>
             </div>
 
-            <div className="crt-screen-footer">
-              <span>STATUS: RESOLVED</span>
-              <span>COSMOS LOCK: ACTIVE</span>
+            {/* Decorative bottom ticker */}
+            <div className="crt-world-footer-ticker">
+              <div className="ticker-label">CABLE SEARCH:</div>
+              <div className="ticker-text-scroll">
+                CONNECTED TO SURREAL ARCHIVE · PRESS L/R ARROWS TO PAN CAMERA VIEW · USE SCREEN BUTTONS TO CONTROL VCR 
+              </div>
             </div>
           </div>
         )}

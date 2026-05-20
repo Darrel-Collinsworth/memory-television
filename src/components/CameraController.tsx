@@ -53,8 +53,7 @@ export const CameraController = () => {
   }, [tvRaised, currentWorld, debugMode]);
 
   useFrame(() => {
-    const isHome  = currentWorld === 'home';
-    const canLook = !tvRaised && !isHome && !debugMode;
+    const canLook = !tvRaised && !debugMode;
 
     let targetYaw   = 0;
     let targetPitch = 0;

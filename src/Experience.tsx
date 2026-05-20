@@ -5,84 +5,117 @@ import { WorldScene } from './components/WorldScene';
 import { DustParticles } from './components/DustParticles';
 import { OrbitControls } from '@react-three/drei';
 import { CameraController } from './components/CameraController';
+import { HubEnvironment } from './components/HubEnvironment';
+
+// Hub sky color — warm soft blue that reads as a dreamy open sky
+const HUB_SKY = '#ccdcea';
 
 export const Experience = () => {
   const currentWorld = useWorldStore((state) => state.currentWorld);
   const debugMode = useWorldStore((state) => state.debugMode);
 
-  // Dynamic environmental properties
   const isHome = currentWorld === 'home';
-  
-  // In debug mode, we override fog color and make it bright white or completely clear it
-  const fogColor = debugMode ? '#22222b' : (isHome ? '#050508' : worlds[currentWorld].fogColor);
-  const fogNear = debugMode ? 50 : 2.5;
-  const fogFar = debugMode ? 200 : 9.0;
-  
+
+  // Fog: hub gets an open, warm sky palette; worlds keep their close atmospheric fog
+  const fogColor = debugMode
+    ? '#22222b'
+    : isHome
+    ? HUB_SKY
+    : worlds[currentWorld].fogColor;
+
+  // Hub fog is much deeper so the floating cards at 6–9 units are visible
+  const fogNear = debugMode ? 50  : isHome ? 10  : 2.5;
+  const fogFar  = debugMode ? 200 : isHome ? 26  : 9.0;
+
   return (
     <>
-      {/* --- DYNAMIC RETRO-ATMOSPHERIC FOG --- */}
+      {/* --- SCENE BACKGROUND & FOG --- */}
       <color attach="background" args={[fogColor]} />
       <fog attach="fog" args={[fogColor, fogNear, fogFar]} />
 
-      {/* --- BASE SCENE LIGHTS & DEBUG OVERRIDES --- */}
+      {/* --- DEBUG MODE OVERRIDES --- */}
       {debugMode ? (
         <>
-          {/* Super bright flat ambient lighting for visual debugging */}
           <ambientLight intensity={2.2} color="#ffffff" />
           <directionalLight position={[5, 10, 5]} intensity={2.0} castShadow />
           <directionalLight position={[-5, -5, -5]} intensity={0.5} />
-          
-          {/* OrbitControls allow free navigation around the TV mesh and spatial bounds */}
           <OrbitControls makeDefault />
         </>
-      ) : (
+      ) : isHome ? (
         <>
-          <ambientLight intensity={isHome ? 0.75 : 0.45} />
-          
-          {/* Front-right Key directional light to bring out TV depth & textures */}
+          {/* Hub base ambient — HubEnvironment adds its own richer lights on top */}
+          <ambientLight intensity={1.2} color="#f8f0e8" />
+
+          {/* Warm key light on the CRT TV so it pops against the bright bg */}
           <directionalLight
             position={[1.5, 2.5, 2.0]}
-            intensity={isHome ? 2.0 : 1.0}
+            intensity={1.4}
+            color="#ffe8c8"
             castShadow
             shadow-mapSize={[1024, 1024]}
           />
-          
-          {/* Volumetric spotlight shining down onto the handheld CRT TV */}
+
+          {/* Soft spotlight down onto TV screen */}
           <spotLight
             position={[0, 4, 0.5]}
             angle={0.45}
             penumbra={1}
-            intensity={isHome ? 3.5 : 1.5}
-            color={isHome ? '#fff' : worlds[currentWorld].themeColor}
+            intensity={2.2}
+            color="#fff4e8"
+            castShadow
+            shadow-mapSize={[1024, 1024]}
+          />
+        </>
+      ) : (
+        <>
+          {/* World-mode lighting (unchanged) */}
+          <ambientLight intensity={0.45} />
+          <directionalLight
+            position={[1.5, 2.5, 2.0]}
+            intensity={1.0}
+            castShadow
+            shadow-mapSize={[1024, 1024]}
+          />
+          <spotLight
+            position={[0, 4, 0.5]}
+            angle={0.45}
+            penumbra={1}
+            intensity={1.5}
+            color={worlds[currentWorld].themeColor}
             castShadow
             shadow-mapSize={[1024, 1024]}
           />
         </>
       )}
 
-      {/* Subtle floor grid to ground the user in spatial geometry */}
-      <gridHelper 
-        args={[40, 40, debugMode ? '#444455' : '#111118', debugMode ? '#222233' : '#07070a']} 
-        position={[0, -1.8, 0]} 
-      />
-
-      {/* --- ATMOSPHERIC FLOATING DUST --- */}
-      {!debugMode && (
-        <DustParticles 
-          count={isHome ? 120 : 180} 
-          size={0.035} 
-          speed={0.06} 
-          areaSize={8.5} 
+      {/* Floor grid — only visible in world/debug modes, hidden in hub */}
+      {!isHome && (
+        <gridHelper
+          args={[40, 40, debugMode ? '#444455' : '#111118', debugMode ? '#222233' : '#07070a']}
+          position={[0, -1.8, 0]}
         />
       )}
 
-      {/* --- EDGE-ZONE CAMERA PAN CONTROLLER --- */}
+      {/* --- HUB ENVIRONMENT (only in home/hub mode) --- */}
+      {isHome && !debugMode && <HubEnvironment />}
+
+      {/* --- ATMOSPHERIC FLOATING DUST --- */}
+      {!debugMode && (
+        <DustParticles
+          count={isHome ? 60 : 180}
+          size={isHome ? 0.028 : 0.035}
+          speed={isHome ? 0.03 : 0.06}
+          areaSize={isHome ? 12 : 8.5}
+        />
+      )}
+
+      {/* --- CAMERA PAN CONTROLLER --- */}
       <CameraController />
 
-      {/* --- THE EXPLORATION CRT COMPANION (Handheld) --- */}
+      {/* --- CRT TV COMPANION --- */}
       <MemoryTelevision />
 
-      {/* --- PORTAL ARTIST WORLDS (Dynamic environmental geometry & floating frames) --- */}
+      {/* --- ARTIST WORLD PORTAL SCENES --- */}
       <WorldScene />
     </>
   );
