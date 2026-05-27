@@ -13,8 +13,12 @@ const HUB_SKY = '#b22b3b';
 export const Experience = () => {
   const currentWorld = useWorldStore((state) => state.currentWorld);
   const debugMode = useWorldStore((state) => state.debugMode);
+  const selectedArtifactId = useWorldStore((state) => state.selectedArtifactId);
 
   const isHome = currentWorld === 'home';
+
+  // Apply a subtle 30% dimming damp factor when in Artifact Focus Mode
+  const lightDamp = selectedArtifactId ? 0.70 : 1.0;
 
   // Fog: hub gets an open, warm sky palette; worlds keep their close atmospheric fog
   const fogColor = debugMode
@@ -44,12 +48,12 @@ export const Experience = () => {
       ) : isHome ? (
         <>
           {/* Hub base ambient — HubEnvironment adds its own richer lights on top */}
-          <ambientLight intensity={1.2} color="#f8f0e8" />
+          <ambientLight intensity={1.2 * lightDamp} color="#f8f0e8" />
 
           {/* Warm key light on the CRT TV so it pops against the bright bg */}
           <directionalLight
             position={[1.5, 2.5, 2.0]}
-            intensity={1.4}
+            intensity={1.4 * lightDamp}
             color="#ffe8c8"
             castShadow
             shadow-mapSize={[1024, 1024]}
@@ -60,7 +64,7 @@ export const Experience = () => {
             position={[0, 4, 0.5]}
             angle={0.45}
             penumbra={1}
-            intensity={2.2}
+            intensity={2.2 * lightDamp}
             color="#fff4e8"
             castShadow
             shadow-mapSize={[1024, 1024]}

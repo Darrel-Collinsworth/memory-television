@@ -67,7 +67,7 @@ export const TVGuideScreen = () => {
       { title: 'SYNTH HARBOR LOOPS', rating: 'TV-14', slotsSpanned: 1 },
       { title: 'TAPE WARP SESSIONS', rating: 'TV-PG', slotsSpanned: 2 },
     ],
-    'portla-worlds': [
+    'portland-worlds': [
       { title: 'ETHEREAL EMERALD MONOLITH RES...', rating: 'NR', slotsSpanned: 3 },
     ],
   };

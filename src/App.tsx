@@ -5,6 +5,7 @@ import { useWorldStore } from './store/useWorldStore';
 import { worlds } from './data/worlds';
 import { Experience } from './Experience';
 import { AudioController } from './components/AudioController';
+import { HUB_ARTIFACTS, WORLD_ARTWORKS } from './data/artifacts';
 import './index.css';
 
 export default function App() {
@@ -16,19 +17,21 @@ export default function App() {
   const setTvRaised = useWorldStore((state) => state.setTvRaised);
   const debugMode = useWorldStore((state) => state.debugMode);
   const setDebugMode = useWorldStore((state) => state.setDebugMode);
+  const selectedArtifactId = useWorldStore((state) => state.selectedArtifactId);
 
   const isHome = currentWorld === 'home';
   const activeWorld = isHome ? null : worlds[currentWorld];
 
-  // Dynamic chromatic aberration offset during scene transition
+  // Dynamic chromatic aberration offset during scene transition or artifact focus
   const aberrationOffset: [number, number] = transitioning 
     ? [0.018, 0.018] 
-    : [0.0012, 0.0012];
+    : selectedArtifactId
+      ? [0.0002, 0.0002] // Crisp and sharp for excellent readability during focus inspection!
+      : [0.0012, 0.0012];
 
-  // Dynamic bloom intensity during transition peak
-  // Hub is bright — dial back bloom & vignette so they don't crush the pastels
-  const bloomIntensity = transitioning ? 2.5 : isHome ? 0.18 : 0.45;
-  const vignetteAmount = transitioning ? 1.5 : isHome ? 0.55 : 1.1;
+  // Dynamic bloom intensity and vignette during transition, focus, or exploration
+  const bloomIntensity = transitioning ? 2.5 : selectedArtifactId ? 0.08 : isHome ? 0.18 : 0.45;
+  const vignetteAmount = transitioning ? 1.5 : selectedArtifactId ? 0.38 : isHome ? 0.55 : 1.1;
 
   return (
     <div style={{ width: '100vw', height: '100vh', position: 'relative', overflow: 'hidden', background: isHome ? '#b22b3b' : '#050508' }}>
@@ -75,6 +78,9 @@ export default function App() {
 
       {/* --- VOLUMETRIC ROOM VIGNETTE LAYER --- */}
       <div className="volumetric-vignette" />
+
+      {/* --- COZY FOCUS BACKDROP BLUR VIGNETTE LAYER --- */}
+      <div className={`focus-backdrop ${selectedArtifactId ? 'active' : ''}`} />
 
       {/* --- FULLSCREEN STATIC GLITCH TRANSITION --- */}
       <div className={`fullscreen-static-overlay ${transitioning ? 'active' : ''}`}>
@@ -131,11 +137,18 @@ export default function App() {
         {/* HUD Footer */}
         <footer className="hud-footer">
           <div className="hud-instructions">
-            {isHome ? (
+            {selectedArtifactId ? (
+              <>
+                Viewing <strong>{
+                  (HUB_ARTIFACTS.find(f => f.id === selectedArtifactId) || 
+                   Object.values(WORLD_ARTWORKS).flat().find(a => a.id === selectedArtifactId))?.title || 'Memory Fragment'
+                }</strong>. Press <strong>ESCAPE</strong> or click <strong>RETURN TO EXPLORATION</strong> on the TV screen to return.
+              </>
+            ) : isHome ? (
               <>
                 {tvRaised
                   ? <>Look down at the <strong>CRT companion</strong> in your hands. Click a channel to enter a world — or <strong>lower the CRT</strong> to look around this memory space.</>
-                  : <>Move your mouse to <strong>look around</strong> the memory sky. Raise the CRT to browse channels and enter a world.</>
+                  : <>Move your mouse to <strong>look around</strong> the memory sky. Click any <strong>floating memory artifact</strong> to inspect it.</>
                 }
               </>
             ) : (
@@ -146,7 +159,6 @@ export default function App() {
                 }
               </>
             )}
-
           </div>
 
           <div className="hud-telemetry">

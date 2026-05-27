@@ -2,6 +2,7 @@ import { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { MemoryFragmentField } from './MemoryFragmentField';
+import { useWorldStore } from '../store/useWorldStore';
 
 // ---------------------------------------------------------------------------
 // MEMORY CARD DATA
@@ -136,6 +137,9 @@ export const HubEnvironment = () => {
   const rockRefs       = useRef<(THREE.Mesh | null)[]>([]);
   const islandRef      = useRef<THREE.Group>(null);
 
+  const selectedArtifactId = useWorldStore((state) => state.selectedArtifactId);
+  const lightDamp = selectedArtifactId ? 0.70 : 1.0;
+
   // Generate a beautiful, oddly nostalgic sunset gradient texture procedurally via code.
   // This keeps loading extremely snappy (0ms assets delay) and perfectly performant.
   const skyTexture = useMemo(() => {
@@ -209,13 +213,13 @@ export const HubEnvironment = () => {
 
       {/* Sky hemisphere: warm golden sky above, soft earth-cream below */}
       <hemisphereLight
-        args={['#c8d8f0', '#e8d4b8', 0.9]}
+        args={['#c8d8f0', '#e8d4b8', 0.9 * lightDamp]}
       />
 
       {/* Main warm sun — upper right, golden hour feel */}
       <directionalLight
         position={[8, 14, 4]}
-        intensity={1.6}
+        intensity={1.6 * lightDamp}
         color="#ffe8c0"
         castShadow
         shadow-mapSize={[1024, 1024]}
@@ -224,14 +228,14 @@ export const HubEnvironment = () => {
       {/* Cool sky-fill from upper left — gives depth and separation */}
       <directionalLight
         position={[-6, 8, -3]}
-        intensity={0.5}
+        intensity={0.5 * lightDamp}
         color="#d0e4f8"
       />
 
       {/* Soft lavender bounce from below — fills shadows warmly */}
       <pointLight
         position={[0, -1.5, -3]}
-        intensity={0.8}
+        intensity={0.8 * lightDamp}
         distance={12}
         color="#e8d0f8"
       />

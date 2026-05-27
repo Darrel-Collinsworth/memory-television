@@ -30,6 +30,7 @@ export const CameraController = () => {
   const tvRaised    = useWorldStore((s) => s.tvRaised);
   const currentWorld = useWorldStore((s) => s.currentWorld);
   const debugMode   = useWorldStore((s) => s.debugMode);
+  const selectedArtifactId = useWorldStore((s) => s.selectedArtifactId);
 
   // Raw normalized mouse position (-1 to +1), updated by window listener
   const rawMouse = useRef({ x: 0, y: 0 });
@@ -49,11 +50,11 @@ export const CameraController = () => {
     return () => window.removeEventListener('mousemove', onMouseMove);
   }, []);
 
-  // Reset smoothed state when mode changes
+  // Reset smoothed state when channel world or debug changes, but NOT when raising/lowering TV or selecting artifacts
   useEffect(() => {
     currentYaw.current   = 0;
     currentPitch.current = 0;
-  }, [tvRaised, currentWorld, debugMode]);
+  }, [currentWorld, debugMode]);
 
   useFrame(() => {
     const canLook = !tvRaised && !debugMode;
@@ -75,9 +76,21 @@ export const CameraController = () => {
 
       targetYaw   = -easedX * MAX_YAW;
       targetPitch = easedY * (y >= 0 ? MAX_PITCH_UP : MAX_PITCH_DOWN);
+    } else if (selectedArtifactId && !debugMode) {
+      // Let the viewer subtly pan the camera even in Focus Mode (damped by 80%)
+      // This preserves rich 3D horizon perspective without disorienting the view.
+      const { x, y } = rawMouse.current;
+      const clampedX = Math.max(-1, Math.min(1, x));
+      const clampedY = Math.max(-1, Math.min(1, y));
+      const easedX = Math.sin(clampedX * Math.PI / 2);
+      const easedY = Math.sin(clampedY * Math.PI / 2);
+
+      targetYaw   = -easedX * MAX_YAW * 0.20;
+      targetPitch = easedY * (y >= 0 ? MAX_PITCH_UP : MAX_PITCH_DOWN) * 0.20;
     }
 
-    const speed = canLook ? LERP_SPEED : RETURN_SPEED;
+    // When focused, we want a very stable camera drift to match the presentation posture
+    const speed = canLook ? LERP_SPEED : (selectedArtifactId ? 0.035 : RETURN_SPEED);
     currentYaw.current   = THREE.MathUtils.lerp(currentYaw.current,   targetYaw,   speed);
     currentPitch.current = THREE.MathUtils.lerp(currentPitch.current, targetPitch, speed);
 

@@ -970,6 +970,141 @@ body, html, #root {
   z-index: 2;
 }
 
+/* Cozy backdrop vignette overlay during Artifact Focus Mode */
+.focus-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.08) 0%, rgba(5, 5, 8, 0.05) 40%, rgba(0, 0, 0, 0.72) 100%);
+  backdrop-filter: blur(0px);
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0;
+  transition: opacity 1.0s cubic-bezier(0.16, 1, 0.3, 1), backdrop-filter 1.0s ease;
+}
+.focus-backdrop.active {
+  opacity: 1;
+  backdrop-filter: blur(2.5px);
+}
+
+/* TV Bezel and badge colors for artifact transmission screen */
+.theme-artifact {
+  background: rgba(139, 92, 246, 0.22) !important;
+  border-bottom: 2px solid rgba(139, 92, 246, 0.5) !important;
+}
+
+.theme-focus {
+  background: #c084fc !important;
+  color: #1e1b4b !important;
+  font-weight: 800;
+  box-shadow: 0 0 10px rgba(192, 132, 252, 0.6);
+}
+
+/* CRT Screen Broadcast Signal Box styles */
+.crt-artifact-broadcast-box {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #020205;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+  margin: 0.8rem 0;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.95);
+}
+
+.crt-broadcast-glitch-container {
+  text-align: center;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.crt-broadcast-static {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(rgba(255,255,255,0.06), rgba(0,0,0,0));
+  background-color: transparent;
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+.crt-broadcast-message {
+  z-index: 2;
+  color: #a78bfa;
+  text-shadow: 0 0 6px rgba(167, 139, 250, 0.7);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  line-height: 1.5;
+}
+
+.pulse-text {
+  animation: crt-pulse 2.2s infinite ease-in-out;
+  font-weight: bold;
+}
+
+.sub-pulse-text {
+  font-size: 0.62rem;
+  margin-top: 0.35rem;
+  animation: crt-pulse-delayed 2.2s infinite ease-in-out;
+}
+
+@keyframes crt-pulse {
+  0%, 100% { opacity: 0.35; transform: scale(0.98); filter: blur(0.2px); }
+  50% { opacity: 1.0; transform: scale(1.01); filter: blur(0px); }
+}
+
+@keyframes crt-pulse-delayed {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 0.75; }
+}
+
+.pulsing {
+  animation: crt-pulse 1.5s infinite ease-in-out;
+}
+
+.crt-flicker-text {
+  animation: text-flicker 4s infinite;
+}
+
+@keyframes text-flicker {
+  0%, 100% { opacity: 1; }
+  23% { opacity: 1; }
+  24% { opacity: 0.8; }
+  26% { opacity: 0.9; }
+  27% { opacity: 1; }
+  70% { opacity: 1; }
+  71% { opacity: 0.75; }
+  72% { opacity: 0.9; }
+  73% { opacity: 1; }
+}
+
+.return-to-sky-btn {
+  background: linear-gradient(135deg, rgba(167, 139, 250, 0.25) 0%, rgba(139, 92, 246, 0.15) 100%) !important;
+  border: 1px solid rgba(167, 139, 250, 0.4) !important;
+  color: #e9d5ff !important;
+  box-shadow: 0 0 10px rgba(167, 139, 250, 0.15) !important;
+  transition: all 0.2s ease !important;
+}
+
+.return-to-sky-btn:hover {
+  background: linear-gradient(135deg, rgba(167, 139, 250, 0.4) 0%, rgba(139, 92, 246, 0.3) 100%) !important;
+  border: 1px solid rgba(167, 139, 250, 0.6) !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 15px rgba(167, 139, 250, 0.45) !important;
+}
+
 /* HTML Art Plane CSS fallback design */
 .artwork-html-frame {
   width: 320px;
@@ -1115,7 +1250,7 @@ body, html, #root {
   animation: crt-pulse-pink 1.8s infinite alternate;
 }
 
-.crt-toggle-tab.theme-portla-worlds {
+.crt-toggle-tab.theme-portland-worlds {
   border-top-color: #00ffcc;
   color: #00ffcc;
   text-shadow: 0 0 6px rgba(0, 255, 204, 0.65);
@@ -1226,4 +1361,232 @@ body, html, #root {
   flex-direction: row;
   gap: 0.5rem;
 }
+
+/* ========================================================================= */
+/* VCR BROADCAST ARTIFACT FOCUS SCREEN REDESIGN                              */
+/* ========================================================================= */
+.crt-artifact-focus-screen {
+  background-color: #03030b !important;
+  font-family: 'Share Tech Mono', 'VT323', monospace !important;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.crt-artifact-main-body {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  padding: 8px 12px;
+  gap: 12px;
+  overflow: hidden;
+}
+
+.crt-artifact-preview-col {
+  width: 44%;
+  height: 148px;
+  background: #020205;
+  border: 1px solid rgba(167, 139, 250, 0.25);
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.95);
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Widescreen outrun grid generator inside the image preview */
+.preview-grid-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(rgba(139, 92, 246, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(139, 92, 246, 0.08) 1px, transparent 1px);
+  background-size: 15px 15px;
+  background-position: center;
+}
+
+.preview-glow-sun {
+  position: absolute;
+  bottom: -40px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #f43f5e 20%, rgba(217, 70, 239, 0.4) 70%, transparent 100%);
+  opacity: 0.35;
+  filter: blur(8px);
+}
+
+.preview-vector-glyph {
+  font-size: 3.2rem;
+  z-index: 2;
+  filter: drop-shadow(0 0 10px currentColor);
+  animation: float-slow 4s ease-in-out infinite alternate;
+}
+
+@keyframes float-slow {
+  0% { transform: translateY(-4px) rotate(-3deg); }
+  100% { transform: translateY(4px) rotate(3deg); }
+}
+
+.crt-artifact-details-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  gap: 4px;
+  overflow-y: auto;
+}
+
+.artifact-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2px;
+}
+
+.artifact-title-text {
+  font-family: 'Outfit', 'Share Tech Mono', sans-serif !important;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+  line-height: 1.1;
+}
+
+.artifact-badge-type {
+  font-size: 0.55rem;
+  padding: 1px 5px;
+  border: 1px solid currentColor;
+  border-radius: 3px;
+  font-weight: bold;
+  letter-spacing: 0.1em;
+  text-shadow: 0 0 4px currentColor;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.artifact-prop-row {
+  font-size: 0.62rem;
+  color: rgba(255, 255, 255, 0.9);
+  display: flex;
+  gap: 6px;
+  line-height: 1.2;
+}
+
+.artifact-prop-label {
+  color: #c084fc; /* purple label */
+  font-weight: bold;
+}
+
+.artifact-description-block {
+  margin-top: 2px;
+}
+
+.artifact-desc-header {
+  font-size: 0.6rem;
+  color: #fbbf24; /* yellow label */
+  font-weight: bold;
+  letter-spacing: 0.05em;
+  margin-bottom: 1px;
+}
+
+.artifact-desc-para {
+  font-size: 0.62rem;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.25;
+  margin: 0;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+/* Metadata catalog table styling matching VCR guide mockup */
+.crt-artifact-metadata-table {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 4px 12px;
+  gap: 6px;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.crt-metadata-cell {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.crt-metadata-label {
+  font-size: 0.52rem;
+  color: #fbbf24; /* gold label */
+  font-weight: bold;
+  letter-spacing: 0.05em;
+  margin-bottom: 1px;
+}
+
+.crt-metadata-val {
+  font-size: 0.6rem;
+  color: #93c5fd; /* light blue values */
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.signal-status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.mini-signal-bars {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 1px;
+  height: 8px;
+}
+
+.mini-signal-bar {
+  width: 2px;
+  background: #374151;
+  border-radius: 1px;
+}
+
+.mini-signal-bar.active {
+  background: #10b981; /* emerald active */
+  box-shadow: 0 0 4px #10b981;
+}
+
+.wave-condition-icon {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 4px;
+  opacity: 0.7;
+}
+
+.crt-cable-return-btn.return-to-sky-btn {
+  background: #4c1d95; /* deep purple background */
+  border: 1px solid #7c3aed;
+  color: #ffffff;
+  font-family: 'Share Tech Mono', monospace !important;
+  font-size: 0.7rem;
+  font-weight: bold;
+  padding: 4px 0;
+  margin: 6px 12px;
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(124, 58, 237, 0.3);
+  transition: all 0.2s ease-in-out;
+  letter-spacing: 0.05em;
+}
+
+.crt-cable-return-btn.return-to-sky-btn:hover {
+  background: #6d28d9;
+  border-color: #a78bfa;
+  box-shadow: 0 0 15px rgba(167, 139, 250, 0.6);
+  transform: translateY(-1px);
+}
+
 

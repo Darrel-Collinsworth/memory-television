@@ -4,9 +4,11 @@ import * as THREE from 'three';
 import { Html } from '@react-three/drei';
 import { useWorldStore } from '../store/useWorldStore';
 import { worlds } from '../data/worlds';
+import { InspectableArtifact } from './InspectableArtifact';
 
 export const WorldScene = () => {
   const currentWorld = useWorldStore((state) => state.currentWorld);
+  const selectedArtifactId = useWorldStore((state) => state.selectedArtifactId);
   const elementsGroupRef = useRef<THREE.Group>(null);
   const artworksGroupRef = useRef<THREE.Group>(null);
 
@@ -93,8 +95,8 @@ export const WorldScene = () => {
           </>
         )}
 
-        {activeWorld.id === 'portla-worlds' && (
-          // PORTL& Worlds: Glowing organic crystal prisms and golden elements
+        {activeWorld.id === 'portland-worlds' && (
+          // PORTLAND Worlds: Glowing organic crystal prisms and golden elements
           <>
             {/* Giant Central floating golden ring */}
             <mesh position={[0, 2.5, -7]} rotation={[0.4, 0.4, 0]}>
@@ -118,89 +120,100 @@ export const WorldScene = () => {
 
       {/* --- FLOATING HOLOGRAPHIC ARTWORK PANELS --- */}
       <group ref={artworksGroupRef}>
-        {activeWorld.artworks.map((art) => (
-          <group 
-            key={art.id} 
-            position={art.position} 
-            rotation={art.rotation as [number, number, number]}
-          >
-            {/* Holographic frame backdrop to anchor correct occlusion */}
-            <mesh castShadow receiveShadow>
-              <planeGeometry args={art.scale} />
-              <meshBasicMaterial transparent opacity={0} color="#000" depthWrite={false} />
-            </mesh>
+        {activeWorld.artworks.map((art) => {
+          const isSelected = selectedArtifactId === art.id;
+          const currentOpacity = selectedArtifactId ? (isSelected ? 1.0 : 0.22) : 1.0;
 
-            {/* Injected HTML Artwork Panel */}
-            <Html
-              transform
-              distanceFactor={3.2}
-              occlude="blending"
-              style={{
-                pointerEvents: 'auto',
-                color: art.color
-              }}
+          return (
+            <InspectableArtifact
+              key={art.id}
+              id={art.id}
+              title={art.title}
+              type="artwork"
+              color={art.color}
+              position={art.position}
+              rotation={art.rotation as [number, number, number]}
             >
-              <div 
-                className="artwork-html-frame" 
-                style={{ 
+              {/* Holographic frame backdrop to anchor correct occlusion */}
+              <mesh castShadow receiveShadow>
+                <planeGeometry args={art.scale} />
+                <meshBasicMaterial transparent opacity={0} color="#000" depthWrite={false} />
+              </mesh>
+
+              {/* Injected HTML Artwork Panel */}
+              <Html
+                transform
+                distanceFactor={3.2}
+                occlude="blending"
+                style={{
+                  pointerEvents: 'auto',
                   color: art.color,
-                  borderColor: `${art.color}33`,
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = art.color;
-                  e.currentTarget.style.boxShadow = `0 10px 40px rgba(0,0,0,0.9), 0 0 25px ${art.color}66`;
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.07)';
-                  e.currentTarget.style.boxShadow = '0 10px 40px rgba(0, 0, 0, 0.9)';
+                  opacity: currentOpacity,
+                  transition: 'opacity 0.6s ease'
                 }}
               >
-                {/* Visual Artwork Placeholder */}
-                <div className="artwork-visual-placeholder">
-                  {/* Generate a stylized CSS pattern utilizing the active accent color */}
-                  <div 
-                    className="artwork-visual-glitch"
-                    style={{
-                      background: `linear-gradient(135deg, #020205 0%, ${art.color}22 50%, #020205 100%)`,
-                    }}
-                  />
-                  <div 
-                    className="artwork-visual-pattern"
-                    style={{
-                      backgroundImage: `radial-gradient(circle, ${art.color} 1px, transparent 1px)`,
-                      backgroundSize: '20px 20px',
-                    }}
-                  />
-                  {/* Procedural glyph design */}
-                  <div 
-                    style={{
-                      fontSize: '3rem',
-                      fontFamily: 'monospace',
-                      fontWeight: 'bold',
-                      color: art.color,
-                      opacity: 0.8,
-                      textShadow: `0 0 10px ${art.color}`,
-                      zIndex: 3
-                    }}
-                  >
-                    ✦
+                <div 
+                  className="artwork-html-frame" 
+                  style={{ 
+                    color: art.color,
+                    borderColor: `${art.color}33`,
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = art.color;
+                    e.currentTarget.style.boxShadow = `0 10px 40px rgba(0,0,0,0.9), 0 0 25px ${art.color}66`;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.07)';
+                    e.currentTarget.style.boxShadow = '0 10px 40px rgba(0, 0, 0, 0.9)';
+                  }}
+                >
+                  {/* Visual Artwork Placeholder */}
+                  <div className="artwork-visual-placeholder">
+                    {/* Generate a stylized CSS pattern utilizing the active accent color */}
+                    <div 
+                      className="artwork-visual-glitch"
+                      style={{
+                        background: `linear-gradient(135deg, #020205 0%, ${art.color}22 50%, #020205 100%)`,
+                      }}
+                    />
+                    <div 
+                      className="artwork-visual-pattern"
+                      style={{
+                        backgroundImage: `radial-gradient(circle, ${art.color} 1px, transparent 1px)`,
+                        backgroundSize: '20px 20px',
+                      }}
+                    />
+                    {/* Procedural glyph design */}
+                    <div 
+                      style={{
+                        fontSize: '3rem',
+                        fontFamily: 'monospace',
+                        fontWeight: 'bold',
+                        color: art.color,
+                        opacity: 0.8,
+                        textShadow: `0 0 10px ${art.color}`,
+                        zIndex: 3
+                      }}
+                    >
+                      ✦
+                    </div>
                   </div>
-                </div>
 
-                {/* Artwork Metadata Box */}
-                <div className="artwork-info">
-                  <div className="artwork-title" style={{ textShadow: `0 0 8px ${art.color}66` }}>
-                    {art.title}
-                  </div>
-                  <div className="artwork-meta">
-                    <span>{art.year}</span>
-                    <span>{art.medium}</span>
+                  {/* Artwork Metadata Box */}
+                  <div className="artwork-info">
+                    <div className="artwork-title" style={{ textShadow: `0 0 8px ${art.color}66` }}>
+                      {art.title}
+                    </div>
+                    <div className="artwork-meta">
+                      <span>{art.year}</span>
+                      <span>{art.medium}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </Html>
-          </group>
-        ))}
+              </Html>
+            </InspectableArtifact>
+          );
+        })}
       </group>
     </group>
   );

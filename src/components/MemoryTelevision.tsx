@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { Html } from '@react-three/drei';
@@ -12,10 +12,19 @@ export const MemoryTelevision = () => {
   const tvRaised = useWorldStore((state) => state.tvRaised);
   const debugMode = useWorldStore((state) => state.debugMode);
   const hoveredWorld = useWorldStore((state) => state.hoveredWorld);
+  const selectedArtifactId = useWorldStore((state) => state.selectedArtifactId);
+  const setSelectedArtifactId = useWorldStore((state) => state.setSelectedArtifactId);
 
   const groupRef = useRef<THREE.Group>(null);
   const tvRef = useRef<THREE.Group>(null);
   const lightRef = useRef<THREE.PointLight>(null);
+
+  // Belt-and-suspenders: whenever the world changes, immediately clear any lingering
+  // artifact focus state so the CRT always starts in Exploration Mode in new worlds.
+  useEffect(() => {
+    setSelectedArtifactId(null);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentWorld]);
 
   // Smoothly lerped color ref for CRT dynamic glow
   const activeColorRef = useRef(new THREE.Color('#2563eb'));
@@ -49,31 +58,48 @@ export const MemoryTelevision = () => {
       targetRotX = isHome ? -1.15 : -1.35; // Slanted almost flat to clear view
     }
 
+    // --- ARTIFACT FOCUS MODE POSITION POSTURE ---
+    const isFocused = selectedArtifactId !== null;
+    if (isFocused) {
+      targetY = 0.04;      // Center vertically in front of user
+      targetZ = -1.78;     // Draw closer for intimate readability
+      targetScale = 0.74;  // Enlarge modestly
+      targetRotX = -0.12;  // Flatter slant so screen is legible, yet retains 3D depth
+    }
+
     // Overlapping organic drifting (dual overlapping sines/cosines at prime frequencies)
-    const swayX = Math.sin(time * 0.7) * 0.012 + Math.cos(time * 1.1) * 0.008;
-    const swayY = Math.cos(time * 0.9) * 0.015 + Math.sin(time * 1.3) * 0.01 + (transitioning ? Math.sin(time * 65) * 0.015 : 0);
-    const swayZ = Math.sin(time * 0.5) * 0.008 + Math.cos(time * 0.8) * 0.006;
-    const swayRotZ = Math.sin(time * 0.4) * 0.006 + Math.cos(time * 0.7) * 0.004;
+    // Reduce sways by 70% during focus mode to stabilize the screen
+    const swayMultiplier = isFocused ? 0.28 : 1.0;
+    const swayX = (Math.sin(time * 0.7) * 0.012 + Math.cos(time * 1.1) * 0.008) * swayMultiplier;
+    const swayY = (Math.cos(time * 0.9) * 0.015 + Math.sin(time * 1.3) * 0.01 + (transitioning ? Math.sin(time * 65) * 0.015 : 0)) * swayMultiplier;
+    const swayZ = (Math.sin(time * 0.5) * 0.008 + Math.cos(time * 0.8) * 0.006) * swayMultiplier;
+    const swayRotZ = (Math.sin(time * 0.4) * 0.006 + Math.cos(time * 0.7) * 0.004) * swayMultiplier;
 
     // Mouse Parallax (responsive to cursor movement)
-    // Disabled when TV is lowered
-    const mouseX = tvRaised ? state.pointer.x : 0;
-    const mouseY = tvRaised ? state.pointer.y : 0;
+    // Dampen mouse response slightly in focus mode to keep it readable
+    const parallaxDamp = isFocused ? 0.22 : 1.0;
+    const mouseX = tvRaised ? state.pointer.x * parallaxDamp : 0;
+    const mouseY = tvRaised ? state.pointer.y * parallaxDamp : 0;
+
+    // Relax the interpolation speed slightly during focus mode transitions (700-1200ms)
+    // to give a slow, heavy, dreamlike "pull-in" look, settling securely.
+    const lerpFactor = isFocused ? 0.045 : 0.08;
+    const scaleFactor = isFocused ? 0.035 : 0.06;
 
     // Smooth interpolation (lerp) toward targets
-    groupRef.current.position.x = THREE.MathUtils.lerp(groupRef.current.position.x, mouseX * 0.12 + swayX, 0.08);
-    groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, targetY + mouseY * 0.1 + swayY, 0.08);
-    groupRef.current.position.z = THREE.MathUtils.lerp(groupRef.current.position.z, targetZ + swayZ, 0.08);
+    groupRef.current.position.x = THREE.MathUtils.lerp(groupRef.current.position.x, mouseX * 0.12 + swayX, lerpFactor);
+    groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, targetY + mouseY * 0.1 + swayY, lerpFactor);
+    groupRef.current.position.z = THREE.MathUtils.lerp(groupRef.current.position.z, targetZ + swayZ, lerpFactor);
 
     const targetRotationX = targetRotX - mouseY * 0.15;
     const targetRotationY = mouseX * 0.22;
     const targetRotationZ = -mouseX * 0.06 + swayRotZ; // Rotational roll banking!
 
-    groupRef.current.rotation.x = THREE.MathUtils.lerp(groupRef.current.rotation.x, targetRotationX, 0.08);
-    groupRef.current.rotation.y = THREE.MathUtils.lerp(groupRef.current.rotation.y, targetRotationY, 0.08);
-    groupRef.current.rotation.z = THREE.MathUtils.lerp(groupRef.current.rotation.z, targetRotationZ, 0.08);
+    groupRef.current.rotation.x = THREE.MathUtils.lerp(groupRef.current.rotation.x, targetRotationX, lerpFactor);
+    groupRef.current.rotation.y = THREE.MathUtils.lerp(groupRef.current.rotation.y, targetRotationY, lerpFactor);
+    groupRef.current.rotation.z = THREE.MathUtils.lerp(groupRef.current.rotation.z, targetRotationZ, lerpFactor);
 
-    const scale = THREE.MathUtils.lerp(tvRef.current.scale.x, targetScale, 0.06);
+    const scale = THREE.MathUtils.lerp(tvRef.current.scale.x, targetScale, scaleFactor);
     tvRef.current.scale.set(scale, scale, scale);
 
     // Phosphor ambient light color smooth-interpolation
@@ -324,12 +350,13 @@ export const MemoryTelevision = () => {
           </mesh>
 
           {/* Flat HTML Screen projection backing */}
+          {/* distanceFactor controls the virtual render resolution: higher = sharper text */}
           <group position={[0, 0.18, 0.19]} rotation={[0, 0, 0]}>
             <Html
               transform
-              distanceFactor={1} // Calibrated to 3.05 to fit beautifully within the physical CRT screen opening
-              scale={[1.5, 1.61, 0.58]} // Scale down to 58% to fit perfectly within the physical bezel
-              position={[0, 0.05, 0.01]} // extremely close to prevent clipping
+              distanceFactor={1.55}
+              scale={[0.97, 1.04, 0.58]}
+              position={[0, 0.05, 0.01]}
               style={{
                 pointerEvents: 'auto',
               }}
