@@ -1,6 +1,7 @@
-import { useRef } from 'react';
+import { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
+import { MemoryFragmentField } from './MemoryFragmentField';
 
 // ---------------------------------------------------------------------------
 // MEMORY CARD DATA
@@ -135,6 +136,31 @@ export const HubEnvironment = () => {
   const rockRefs       = useRef<(THREE.Mesh | null)[]>([]);
   const islandRef      = useRef<THREE.Group>(null);
 
+  // Generate a beautiful, oddly nostalgic sunset gradient texture procedurally via code.
+  // This keeps loading extremely snappy (0ms assets delay) and perfectly performant.
+  const skyTexture = useMemo(() => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 512;
+    canvas.height = 512;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return null;
+
+    // Nostalgic vertical sunset gradient
+    const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    grad.addColorStop(0.0, '#292569');  // Top of sky: violet blue
+    grad.addColorStop(0.35, '#8f4c8b'); // Upper middle: warm magenta lavender
+    grad.addColorStop(0.70, '#e36e59'); // Lower middle: pinkish orange
+    grad.addColorStop(1.0, '#b22b3b');  // Bottom horizon: deep reddish sunset red
+
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    return texture;
+  }, []);
+
+
   useFrame((state) => {
     const t = state.clock.getElapsedTime();
 
@@ -216,14 +242,9 @@ export const HubEnvironment = () => {
       {/* ---------------------------------------------------------------- */}
       <mesh>
         <sphereGeometry args={[18, 32, 32]} />
-        <meshBasicMaterial color="#d8e8f4" side={THREE.BackSide} />
+        <meshBasicMaterial map={skyTexture || undefined} side={THREE.BackSide} />
       </mesh>
 
-      {/* Soft inner haze ring at horizon level */}
-      <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, -1, 0]}>
-        <torusGeometry args={[14, 3, 8, 48]} />
-        <meshBasicMaterial color="#e8dff4" transparent opacity={0.18} />
-      </mesh>
 
       {/* ---------------------------------------------------------------- */}
       {/* FLOATING ISLAND                                                    */}
@@ -256,11 +277,7 @@ export const HubEnvironment = () => {
           <meshStandardMaterial color="#a09080" roughness={0.9} />
         </mesh>
 
-        {/* Island edge rim — light stone highlight */}
-        <mesh position={[0, 0.25, 0]}>
-          <torusGeometry args={[2.59, 0.06, 8, 48]} />
-          <meshStandardMaterial color="#d4c8b4" roughness={0.7} />
-        </mesh>
+
 
         {/* Soft mossy bump — central raised bit */}
         <mesh position={[0.3, 0.35, 0.4]} castShadow>
@@ -381,6 +398,11 @@ export const HubEnvironment = () => {
           <meshBasicMaterial color="#f0eef8" transparent opacity={cloud.op} />
         </mesh>
       ))}
+
+      {/* ---------------------------------------------------------------- */}
+      {/* MEMORY FRAGMENT FIELD / ECOLOGY SYSTEM                            */}
+      {/* ---------------------------------------------------------------- */}
+      <MemoryFragmentField />
     </group>
   );
 };

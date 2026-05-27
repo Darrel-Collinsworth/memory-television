@@ -7,8 +7,8 @@ import { OrbitControls } from '@react-three/drei';
 import { CameraController } from './components/CameraController';
 import { HubEnvironment } from './components/HubEnvironment';
 
-// Hub sky color — warm soft blue that reads as a dreamy open sky
-const HUB_SKY = '#ccdcea';
+// Hub sky color — deep reddish sunset red that blends perfectly with the gradient horizon
+const HUB_SKY = '#b22b3b';
 
 export const Experience = () => {
   const currentWorld = useWorldStore((state) => state.currentWorld);

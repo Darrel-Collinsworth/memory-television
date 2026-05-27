@@ -4,10 +4,10 @@ import * as THREE from 'three';
 import { useWorldStore } from '../store/useWorldStore';
 
 // ----- Feel constants -----
-const MAX_YAW        = 0.65;  // ~37° horizontal
+const MAX_YAW        = 1.70;  // ~97° horizontal each way (total ~194° panoramic viewing range)
 const MAX_PITCH_UP   = 0.38;  // ~22° upward
 const MAX_PITCH_DOWN = 0.22;  // ~13° downward
-const LERP_SPEED     = 0.05;  // camera lag — lower = smoother/lazier
+const LERP_SPEED     = 0.025; // camera lag — lower = smoother/lazier catch-up (adds ~1-1.5s drift catching time)
 const RETURN_SPEED   = 0.04;  // return-to-center speed
 
 /**
@@ -21,6 +21,9 @@ const RETURN_SPEED   = 0.04;  // return-to-center speed
  *   center of screen → look straight ahead
  *   far left/right   → pan left/right (yaw)
  *   far up/down      → tilt up/down (pitch)
+ *
+ * Employs a robust, simple linear interpolation (lerp) with adjusted speed
+ * for an ultra-smooth, stable, cinematic drift with zero spring recoil or wiggling.
  */
 export const CameraController = () => {
   const { camera } = useThree();
@@ -60,15 +63,25 @@ export const CameraController = () => {
 
     if (canLook) {
       const { x, y } = rawMouse.current;
-      targetYaw   = -x * MAX_YAW;
-      targetPitch = y * (y >= 0 ? MAX_PITCH_UP : MAX_PITCH_DOWN);
+
+      // Clamp inputs strictly to [-1, 1] to prevent viewport boundary overflows
+      const clampedX = Math.max(-1, Math.min(1, x));
+      const clampedY = Math.max(-1, Math.min(1, y));
+
+      // Apply a smooth non-linear sine easing curve to soften limits near screen edges.
+      // This dampens rotational acceleration near the boundaries so looking around feels organic.
+      const easedX = Math.sin(clampedX * Math.PI / 2);
+      const easedY = Math.sin(clampedY * Math.PI / 2);
+
+      targetYaw   = -easedX * MAX_YAW;
+      targetPitch = easedY * (y >= 0 ? MAX_PITCH_UP : MAX_PITCH_DOWN);
     }
 
     const speed = canLook ? LERP_SPEED : RETURN_SPEED;
     currentYaw.current   = THREE.MathUtils.lerp(currentYaw.current,   targetYaw,   speed);
     currentPitch.current = THREE.MathUtils.lerp(currentPitch.current, targetPitch, speed);
 
-    // Apply via YXZ order (standard FPS — yaw first, then pitch, no roll)
+    // Apply via YXZ order (yaw first, then pitch, no roll)
     camera.rotation.order = 'YXZ';
     camera.rotation.y = currentYaw.current;
     camera.rotation.x = currentPitch.current;

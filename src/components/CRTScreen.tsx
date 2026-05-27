@@ -6,9 +6,11 @@ export const CRTScreen = () => {
   const currentWorld = useWorldStore((state) => state.currentWorld);
   const transitioning = useWorldStore((state) => state.transitioning);
   const transitionTo = useWorldStore((state) => state.transitionTo);
+  const triggerSound = useWorldStore((state) => state.triggerSound);
 
   const handleSelectChannel = (channelId: WorldType) => {
     if (transitioning) return;
+    triggerSound('thunk'); // heavy physical switch clunk!
     transitionTo(channelId);
   };
 
@@ -87,6 +89,7 @@ export const CRTScreen = () => {
 
               <button
                 className="crt-cable-return-btn"
+                onMouseEnter={() => triggerSound('tick')}
                 onClick={() => handleSelectChannel('home')}
               >
                 ◀ RETURN TO GUIDE (MENU)

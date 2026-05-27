@@ -6,12 +6,7 @@ export const AudioController = () => {
   const transitioning = useWorldStore((state) => state.transitioning);
 
   const audioCtxRef = useRef<AudioContext | null>(null);
-  const humOscRef = useRef<OscillatorNode | null>(null);
-  const staticSrcRef = useRef<AudioBufferSourceNode | null>(null);
-  
   const masterGainRef = useRef<GainNode | null>(null);
-  const humGainRef = useRef<GainNode | null>(null);
-  const staticGainRef = useRef<GainNode | null>(null);
 
   // Initialize Audio Context and Nodes
   const initAudio = () => {
@@ -23,94 +18,88 @@ export const AudioController = () => {
 
     // Master Gain
     const masterGain = ctx.createGain();
-    masterGain.gain.setValueAtTime(0, ctx.currentTime);
+    masterGain.gain.setValueAtTime(soundOn ? 1 : 0, ctx.currentTime);
     masterGain.connect(ctx.destination);
     masterGainRef.current = masterGain;
-
-    // 1. Low Frequency Hum (60Hz Ground Loop Hum)
-    const humOsc = ctx.createOscillator();
-    humOsc.type = 'triangle';
-    humOsc.frequency.setValueAtTime(60, ctx.currentTime); // 60Hz hum
-
-    // Add a secondary harmonic at 120Hz for texture
-    const harmonicOsc = ctx.createOscillator();
-    harmonicOsc.type = 'sine';
-    harmonicOsc.frequency.setValueAtTime(120, ctx.currentTime);
-
-    const humGain = ctx.createGain();
-    humGain.gain.setValueAtTime(0.08, ctx.currentTime); // keep hum subtle
-    
-    humOsc.connect(humGain);
-    harmonicOsc.connect(humGain);
-    humGain.connect(masterGain);
-
-    humOscRef.current = humOsc;
-    humOsc.start();
-    harmonicOsc.start();
-
-    // 2. Grimy Vintage Static (White noise filtered to sound grimy)
-    const bufferSize = ctx.sampleRate * 2; // 2 seconds of noise
-    const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-    const output = noiseBuffer.getChannelData(0);
-    for (let i = 0; i < bufferSize; i++) {
-      output[i] = Math.random() * 2 - 1;
-    }
-
-    const noiseSrc = ctx.createBufferSource();
-    noiseSrc.buffer = noiseBuffer;
-    noiseSrc.loop = true;
-
-    // Filter white noise to make it retro static (narrow bandpass at ~800Hz)
-    const filter = ctx.createBiquadFilter();
-    filter.type = 'bandpass';
-    filter.frequency.setValueAtTime(800, ctx.currentTime);
-    filter.Q.setValueAtTime(0.8, ctx.currentTime);
-
-    const staticGain = ctx.createGain();
-    staticGain.gain.setValueAtTime(0.04, ctx.currentTime); // keep background static very light
-
-    noiseSrc.connect(filter);
-    filter.connect(staticGain);
-    staticGain.connect(masterGain);
-
-    staticSrcRef.current = noiseSrc;
-    staticGainRef.current = staticGain;
-    humGainRef.current = humGain;
-
-    noiseSrc.start();
   };
+
+  // Global user interaction gesture listener to unlock Web Audio API in browsers
+  useEffect(() => {
+    const handleGesture = () => {
+      if (!soundOn) return;
+
+      if (!audioCtxRef.current) {
+        initAudio();
+      }
+      
+      const ctx = audioCtxRef.current;
+      if (ctx && ctx.state === 'suspended') {
+        ctx.resume()
+          .then(() => {
+            console.log('AudioContext successfully unlocked via user gesture.');
+          })
+          .catch((e) => console.warn('Failed to resume AudioContext:', e));
+      }
+    };
+
+    // Register listeners for common user gestures
+    window.addEventListener('click', handleGesture);
+    window.addEventListener('keydown', handleGesture);
+    window.addEventListener('touchstart', handleGesture);
+
+    // Call it immediately in case browser allows it
+    handleGesture();
+
+    return () => {
+      window.removeEventListener('click', handleGesture);
+      window.removeEventListener('keydown', handleGesture);
+      window.removeEventListener('touchstart', handleGesture);
+    };
+  }, [soundOn]);
 
   // Manage Sound Mute/Unmute state
   useEffect(() => {
     if (soundOn) {
-      initAudio();
+      if (!audioCtxRef.current) {
+        initAudio();
+      }
       
       const ctx = audioCtxRef.current;
       const masterGain = masterGainRef.current;
       if (ctx && masterGain) {
         if (ctx.state === 'suspended') {
-          ctx.resume();
+          ctx.resume().catch((e) => console.warn('Failed to resume on sound toggle:', e));
         }
-        // Smoothly fade in audio
-        masterGain.gain.linearRampToValueAtTime(1, ctx.currentTime + 0.5);
+        // Anchoring the current gain value first before ramping is a Web Audio best practice
+        masterGain.gain.setValueAtTime(masterGain.gain.value, ctx.currentTime);
+        masterGain.gain.linearRampToValueAtTime(1, ctx.currentTime + 0.2);
       }
     } else {
       const ctx = audioCtxRef.current;
       const masterGain = masterGainRef.current;
       if (ctx && masterGain) {
-        // Smoothly fade out audio
-        masterGain.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.3);
+        masterGain.gain.setValueAtTime(masterGain.gain.value, ctx.currentTime);
+        masterGain.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.2);
       }
     }
   }, [soundOn]);
 
   // Handle Transition SFX (voltage surge + static burst)
   useEffect(() => {
-    const ctx = audioCtxRef.current;
-    const masterGain = masterGainRef.current;
-
     // Trigger sound effects only if sound is toggled ON and we start a transition
-    if (transitioning && soundOn && ctx && masterGain) {
+    if (transitioning && soundOn) {
+      if (!audioCtxRef.current) {
+        initAudio();
+      }
+
+      const ctx = audioCtxRef.current;
+      const masterGain = masterGainRef.current;
+      if (!ctx || !masterGain) return;
+
+      if (ctx.state === 'suspended') {
+        ctx.resume().catch((e) => console.warn('Failed to resume on transition:', e));
+      }
+
       try {
         const now = ctx.currentTime;
 
@@ -193,9 +182,19 @@ export const AudioController = () => {
   const lastTriggerId = useRef(0);
 
   const playTickSFX = () => {
+    if (!soundOn) return;
+
+    if (!audioCtxRef.current) {
+      initAudio();
+    }
+
     const ctx = audioCtxRef.current;
     const masterGain = masterGainRef.current;
-    if (!soundOn || !ctx || !masterGain || ctx.state === 'suspended') return;
+    if (!ctx || !masterGain) return;
+
+    if (ctx.state === 'suspended') {
+      ctx.resume().catch((e) => console.warn('Failed to resume on tick:', e));
+    }
 
     try {
       const now = ctx.currentTime;
@@ -225,9 +224,19 @@ export const AudioController = () => {
   };
 
   const playThunkSFX = () => {
+    if (!soundOn) return;
+
+    if (!audioCtxRef.current) {
+      initAudio();
+    }
+
     const ctx = audioCtxRef.current;
     const masterGain = masterGainRef.current;
-    if (!soundOn || !ctx || !masterGain || ctx.state === 'suspended') return;
+    if (!ctx || !masterGain) return;
+
+    if (ctx.state === 'suspended') {
+      ctx.resume().catch((e) => console.warn('Failed to resume on thunk:', e));
+    }
 
     try {
       const now = ctx.currentTime;

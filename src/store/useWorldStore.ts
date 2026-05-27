@@ -23,7 +23,7 @@ interface WorldState {
 export const useWorldStore = create<WorldState>((set, get) => ({
   currentWorld: 'home',
   transitioning: false,
-  soundOn: false,
+  soundOn: true,
   tvRaised: true, // Default raised so user sees TV menu at start
   debugMode: false, // Default off
   hoveredWorld: null,

@@ -31,7 +31,7 @@ export default function App() {
   const vignetteAmount = transitioning ? 1.5 : isHome ? 0.55 : 1.1;
 
   return (
-    <div style={{ width: '100vw', height: '100vh', position: 'relative', overflow: 'hidden', background: isHome ? '#ccdcea' : '#050508' }}>
+    <div style={{ width: '100vw', height: '100vh', position: 'relative', overflow: 'hidden', background: isHome ? '#b22b3b' : '#050508' }}>
       
       {/* --- R3F FULLSCREEN 3D CANVAS --- */}
       <div className="canvas-container">
@@ -45,7 +45,7 @@ export default function App() {
           }}
         >
           <Suspense fallback={null}>
-            <color attach="background" args={[isHome ? '#ccdcea' : worlds[currentWorld].fogColor]} />
+            <color attach="background" args={[isHome ? '#b22b3b' : worlds[currentWorld].fogColor]} />
 
             {/* Core Scene Experience */}
             <Experience />
@@ -112,7 +112,7 @@ export default function App() {
               className={`hud-button ${soundOn ? 'active' : ''}`}
               onClick={() => setSoundOn(!soundOn)}
             >
-              <span>{soundOn ? '🔊 HUM ON' : '🔇 HUM OFF'}</span>
+              <span>{soundOn ? '🔊 SOUND ON' : '🔇 SOUND OFF'}</span>
             </button>
           </div>
         </header>
