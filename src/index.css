@@ -10,15 +10,15 @@
   --bg-color: #050508;
   --panel-bg: rgba(6, 6, 12, 0.45);
   --panel-border: rgba(255, 255, 255, 0.07);
-  
+
   --crt-amber: #ffb000;
   --crt-green: #33ff33;
   --crt-blue: #00e5ff;
-  
+
   --text-primary: #f3f4f6;
   --text-secondary: #9ca3af;
   --text-muted: #4b5563;
-  
+
   --shadow-glow: 0 0 10px currentColor;
 
   color-scheme: dark;
@@ -38,7 +38,9 @@
   user-select: none;
 }
 
-body, html, #root {
+body,
+html,
+#root {
   width: 100vw;
   height: 100vh;
   overflow: hidden;
@@ -62,7 +64,8 @@ body, html, #root {
   left: 0;
   width: 100%;
   height: 100%;
-  pointer-events: none; /* Let clicks pass through to Canvas */
+  pointer-events: none;
+  /* Let clicks pass through to Canvas */
   z-index: 10;
   display: flex;
   flex-direction: column;
@@ -72,7 +75,8 @@ body, html, #root {
 }
 
 .hud-interactive {
-  pointer-events: auto; /* Re-enable clicks on buttons */
+  pointer-events: auto;
+  /* Re-enable clicks on buttons */
 }
 
 /* Header */
@@ -192,7 +196,8 @@ body, html, #root {
   width: 512px;
   height: 384px;
   background: #020205;
-  border-radius: 0px; /* Sharp corners instead of rounded/beveled corners */
+  border-radius: 0px;
+  /* Sharp corners instead of rounded/beveled corners */
   padding: 1.5rem;
   position: relative;
   overflow: hidden;
@@ -200,7 +205,8 @@ body, html, #root {
   flex-direction: column;
   justify-content: space-between;
   box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.95);
-  border: none; /* Remove the black CSS border bezel */
+  border: none;
+  /* Remove the black CSS border bezel */
   box-sizing: border-box;
 }
 
@@ -209,10 +215,14 @@ body, html, #root {
   content: " ";
   display: block;
   position: absolute;
-  top: 0; left: 0; bottom: 0; right: 0;
-  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  /* Scanlines only — RGB color fringe removed to keep text crisp */
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.18) 50%);
   z-index: 5;
-  background-size: 100% 4px, 6px 100%;
+  background-size: 100% 4px;
   pointer-events: none;
 }
 
@@ -245,9 +255,17 @@ body, html, #root {
 }
 
 @keyframes crt-flicker-anim {
-  0% { opacity: 0.985; }
-  50% { opacity: 1.0; }
-  100% { opacity: 0.99; }
+  0% {
+    opacity: 0.985;
+  }
+
+  50% {
+    opacity: 1.0;
+  }
+
+  100% {
+    opacity: 0.99;
+  }
 }
 
 /* ==========================================================================
@@ -266,7 +284,7 @@ body, html, #root {
   font-family: 'VT323', monospace;
   font-size: 14px;
   letter-spacing: 0.05em;
-  text-shadow: 0 0 2px rgba(255, 255, 255, 0.3);
+  text-shadow: none;
   overflow: hidden;
   box-sizing: border-box;
   border: 2px solid #1c2b64;
@@ -292,7 +310,8 @@ body, html, #root {
   overflow: hidden;
 }
 
-.tv-guide-info-active, .tv-guide-info-welcome {
+.tv-guide-info-active,
+.tv-guide-info-welcome {
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -422,8 +441,13 @@ body, html, #root {
 }
 
 @keyframes pulse-glow-anim {
-  0% { opacity: 0.2; }
-  100% { opacity: 0.75; }
+  0% {
+    opacity: 0.2;
+  }
+
+  100% {
+    opacity: 0.75;
+  }
 }
 
 .tv-guide-scanline-sweep {
@@ -440,8 +464,13 @@ body, html, #root {
 }
 
 @keyframes sweep-anim {
-  0% { top: 0%; }
-  100% { top: 100%; }
+  0% {
+    top: 0%;
+  }
+
+  100% {
+    top: 100%;
+  }
 }
 
 /* Pure CSS Retro TV Test Pattern Card */
@@ -474,26 +503,77 @@ body, html, #root {
   height: 100%;
 }
 
-.bar.white { background-color: #f0f0f0; }
-.bar.yellow { background-color: #f5c518; }
-.bar.cyan { background-color: #00a2e8; }
-.bar.green { background-color: #22b14c; }
-.bar.magenta { background-color: #a349a4; }
-.bar.red { background-color: #ed1c24; }
-.bar.blue { background-color: #3f48cc; }
+.bar.white {
+  background-color: #f0f0f0;
+}
 
-.bar.black-1 { background-color: #0d0d0d; }
-.bar.black-2 { background-color: #000000; }
-.bar.black-3 { background-color: #121212; }
-.bar.white-block { background-color: #e5e5e5; }
-.bar.blue-block { background-color: #2a319c; }
+.bar.yellow {
+  background-color: #f5c518;
+}
 
-.bar.dark-blue { background-color: #0a1138; }
-.bar.white-test { background-color: #ffffff; }
-.bar.dark-purple { background-color: #180530; }
-.bar.gray-1 { background-color: #1a1a1a; }
-.bar.gray-2 { background-color: #262626; }
-.bar.gray-3 { background-color: #333333; }
+.bar.cyan {
+  background-color: #00a2e8;
+}
+
+.bar.green {
+  background-color: #22b14c;
+}
+
+.bar.magenta {
+  background-color: #a349a4;
+}
+
+.bar.red {
+  background-color: #ed1c24;
+}
+
+.bar.blue {
+  background-color: #3f48cc;
+}
+
+.bar.black-1 {
+  background-color: #0d0d0d;
+}
+
+.bar.black-2 {
+  background-color: #000000;
+}
+
+.bar.black-3 {
+  background-color: #121212;
+}
+
+.bar.white-block {
+  background-color: #e5e5e5;
+}
+
+.bar.blue-block {
+  background-color: #2a319c;
+}
+
+.bar.dark-blue {
+  background-color: #0a1138;
+}
+
+.bar.white-test {
+  background-color: #ffffff;
+}
+
+.bar.dark-purple {
+  background-color: #180530;
+}
+
+.bar.gray-1 {
+  background-color: #1a1a1a;
+}
+
+.bar.gray-2 {
+  background-color: #262626;
+}
+
+.bar.gray-3 {
+  background-color: #333333;
+}
 
 .smpte-text {
   position: absolute;
@@ -567,7 +647,8 @@ body, html, #root {
 }
 
 .tv-guide-channels-grid::-webkit-scrollbar {
-  width: 0px; /* Hide scrollbars inside small CRT */
+  width: 0px;
+  /* Hide scrollbars inside small CRT */
 }
 
 .tv-guide-channel-row {
@@ -859,6 +940,9 @@ body, html, #root {
   overflow: hidden;
   box-sizing: border-box;
   font-size: 11px;
+  /* Ensure nothing bleeds outside this bar */
+  max-width: 100%;
+  width: 100%;
 }
 
 .crt-world-footer-ticker .ticker-label {
@@ -866,6 +950,18 @@ body, html, #root {
   font-weight: bold;
   margin-right: 8px;
   white-space: nowrap;
+  flex-shrink: 0;
+  /* Label never squishes */
+}
+
+/* Clipping wrapper so the marquee text can't escape the footer bar */
+.crt-world-footer-ticker .ticker-track {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .crt-world-footer-ticker .ticker-text-scroll {
@@ -874,11 +970,17 @@ body, html, #root {
   white-space: nowrap;
   animation: ticker-marquee-anim 16s linear infinite;
   display: inline-block;
+  position: absolute;
 }
 
 @keyframes ticker-marquee-anim {
-  0% { transform: translate3d(100%, 0, 0); }
-  100% { transform: translate3d(-100%, 0, 0); }
+  0% {
+    transform: translate3d(100%, 0, 0);
+  }
+
+  100% {
+    transform: translate3d(-100%, 0, 0);
+  }
 }
 
 /* GENERAL MICRO-ANIMATIONS */
@@ -887,8 +989,15 @@ body, html, #root {
 }
 
 @keyframes fade-in-anim {
-  from { opacity: 0; transform: translateY(2px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* --- FULLSCREEN STATIC GLITCH TRANSITION --- */
@@ -918,7 +1027,7 @@ body, html, #root {
 .static-noise-bg {
   width: 100%;
   height: 100%;
-  background-image: radial-gradient(circle, rgba(0,0,0,0) 0%, rgba(0,0,0,0.85) 100%),
+  background-image: radial-gradient(circle, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.85) 100%),
     url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3联%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
   background-repeat: repeat;
   animation: static-shift 0.1s infinite alternate;
@@ -929,8 +1038,13 @@ body, html, #root {
 }
 
 @keyframes static-shift {
-  0% { background-position: 0px 0px; }
-  100% { background-position: 100px 50px; }
+  0% {
+    background-position: 0px 0px;
+  }
+
+  100% {
+    background-position: 100px 50px;
+  }
 }
 
 /* White Flash horizontal line on TV power down/up */
@@ -951,11 +1065,30 @@ body, html, #root {
 }
 
 @keyframes h-line-collapse {
-  0% { transform: scaleY(0) scaleX(1); opacity: 0; }
-  30% { transform: scaleY(30) scaleX(1); opacity: 1; }
-  60% { transform: scaleY(1) scaleX(1); opacity: 1; }
-  90% { transform: scaleY(1) scaleX(0.01); opacity: 0.8; }
-  100% { transform: scaleY(0) scaleX(0); opacity: 0; }
+  0% {
+    transform: scaleY(0) scaleX(1);
+    opacity: 0;
+  }
+
+  30% {
+    transform: scaleY(30) scaleX(1);
+    opacity: 1;
+  }
+
+  60% {
+    transform: scaleY(1) scaleX(1);
+    opacity: 1;
+  }
+
+  90% {
+    transform: scaleY(1) scaleX(0.01);
+    opacity: 0.8;
+  }
+
+  100% {
+    transform: scaleY(0) scaleX(0);
+    opacity: 0;
+  }
 }
 
 /* Volumetric beam or spotlight look for the dark space */
@@ -965,7 +1098,7 @@ body, html, #root {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: radial-gradient(circle at 50% 50%, rgba(0,0,0,0) 30%, rgba(5,5,8,0.55) 100%);
+  background: radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0) 30%, rgba(5, 5, 8, 0.55) 100%);
   pointer-events: none;
   z-index: 2;
 }
@@ -984,9 +1117,10 @@ body, html, #root {
   opacity: 0;
   transition: opacity 1.0s cubic-bezier(0.16, 1, 0.3, 1), backdrop-filter 1.0s ease;
 }
+
 .focus-backdrop.active {
   opacity: 1;
-  backdrop-filter: blur(2.5px);
+  backdrop-filter: blur(1px);
 }
 
 /* TV Bezel and badge colors for artifact transmission screen */
@@ -1034,7 +1168,7 @@ body, html, #root {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: radial-gradient(rgba(255,255,255,0.06), rgba(0,0,0,0));
+  background-image: radial-gradient(rgba(255, 255, 255, 0.06), rgba(0, 0, 0, 0));
   background-color: transparent;
   pointer-events: none;
   opacity: 0.8;
@@ -1061,13 +1195,30 @@ body, html, #root {
 }
 
 @keyframes crt-pulse {
-  0%, 100% { opacity: 0.35; transform: scale(0.98); filter: blur(0.2px); }
-  50% { opacity: 1.0; transform: scale(1.01); filter: blur(0px); }
+
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.98);
+    /* filter: blur removed — was making pulse-text elements soft */
+  }
+
+  50% {
+    opacity: 1.0;
+    transform: scale(1.01);
+  }
 }
 
 @keyframes crt-pulse-delayed {
-  0%, 100% { opacity: 0.2; }
-  50% { opacity: 0.75; }
+
+  0%,
+  100% {
+    opacity: 0.2;
+  }
+
+  50% {
+    opacity: 0.75;
+  }
 }
 
 .pulsing {
@@ -1079,15 +1230,43 @@ body, html, #root {
 }
 
 @keyframes text-flicker {
-  0%, 100% { opacity: 1; }
-  23% { opacity: 1; }
-  24% { opacity: 0.8; }
-  26% { opacity: 0.9; }
-  27% { opacity: 1; }
-  70% { opacity: 1; }
-  71% { opacity: 0.75; }
-  72% { opacity: 0.9; }
-  73% { opacity: 1; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  23% {
+    opacity: 1;
+  }
+
+  24% {
+    opacity: 0.8;
+  }
+
+  26% {
+    opacity: 0.9;
+  }
+
+  27% {
+    opacity: 1;
+  }
+
+  70% {
+    opacity: 1;
+  }
+
+  71% {
+    opacity: 0.75;
+  }
+
+  72% {
+    opacity: 0.9;
+  }
+
+  73% {
+    opacity: 1;
+  }
 }
 
 .return-to-sky-btn {
@@ -1197,7 +1376,8 @@ body, html, #root {
   z-index: 99;
   display: flex;
   justify-content: center;
-  pointer-events: auto; /* Allow clicking! */
+  pointer-events: auto;
+  /* Allow clicking! */
 }
 
 .crt-toggle-tab {
@@ -1224,7 +1404,8 @@ body, html, #root {
 
 .crt-toggle-tab:hover {
   background: rgba(255, 255, 255, 0.1);
-  padding-top: 0.75rem; /* Slight slide up on hover */
+  padding-top: 0.75rem;
+  /* Slight slide up on hover */
   color: #fff;
 }
 
@@ -1269,16 +1450,33 @@ body, html, #root {
 }
 
 @keyframes crt-pulse-red {
-  0% { box-shadow: 0 -4px 12px rgba(255, 68, 68, 0.1), 0 0 4px rgba(255, 68, 68, 0.05); }
-  100% { box-shadow: 0 -4px 28px rgba(255, 68, 68, 0.3), 0 0 16px rgba(255, 68, 68, 0.2); }
+  0% {
+    box-shadow: 0 -4px 12px rgba(255, 68, 68, 0.1), 0 0 4px rgba(255, 68, 68, 0.05);
+  }
+
+  100% {
+    box-shadow: 0 -4px 28px rgba(255, 68, 68, 0.3), 0 0 16px rgba(255, 68, 68, 0.2);
+  }
 }
+
 @keyframes crt-pulse-pink {
-  0% { box-shadow: 0 -4px 12px rgba(255, 0, 255, 0.1), 0 0 4px rgba(255, 0, 255, 0.05); }
-  100% { box-shadow: 0 -4px 28px rgba(255, 0, 255, 0.3), 0 0 16px rgba(255, 0, 255, 0.2); }
+  0% {
+    box-shadow: 0 -4px 12px rgba(255, 0, 255, 0.1), 0 0 4px rgba(255, 0, 255, 0.05);
+  }
+
+  100% {
+    box-shadow: 0 -4px 28px rgba(255, 0, 255, 0.3), 0 0 16px rgba(255, 0, 255, 0.2);
+  }
 }
+
 @keyframes crt-pulse-cyan {
-  0% { box-shadow: 0 -4px 12px rgba(0, 255, 204, 0.1), 0 0 4px rgba(0, 255, 204, 0.05); }
-  100% { box-shadow: 0 -4px 28px rgba(0, 255, 204, 0.3), 0 0 16px rgba(0, 255, 204, 0.2); }
+  0% {
+    box-shadow: 0 -4px 12px rgba(0, 255, 204, 0.1), 0 0 4px rgba(0, 255, 204, 0.05);
+  }
+
+  100% {
+    box-shadow: 0 -4px 28px rgba(0, 255, 204, 0.3), 0 0 16px rgba(0, 255, 204, 0.2);
+  }
 }
 
 /* =====================================================
@@ -1322,42 +1520,59 @@ body, html, #root {
 }
 
 @keyframes edge-arrow-pulse {
-  0%, 100% { opacity: 0.4;  transform: scale(1); }
-  50%       { opacity: 0.85; transform: scale(1.15); }
+
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.85;
+    transform: scale(1.15);
+  }
 }
 
 /* LEFT */
 .edge-zone-left {
-  left: 0; top: 0;
-  width: 9%; height: 100%;
-  background: linear-gradient(to right, var(--edge-color, rgba(255,45,85,0.20)) 0%, transparent 100%);
+  left: 0;
+  top: 0;
+  width: 9%;
+  height: 100%;
+  background: linear-gradient(to right, var(--edge-color, rgba(255, 45, 85, 0.20)) 0%, transparent 100%);
   flex-direction: column;
   gap: 0.5rem;
 }
 
 /* RIGHT */
 .edge-zone-right {
-  right: 0; top: 0;
-  width: 9%; height: 100%;
-  background: linear-gradient(to left, var(--edge-color, rgba(255,45,85,0.20)) 0%, transparent 100%);
+  right: 0;
+  top: 0;
+  width: 9%;
+  height: 100%;
+  background: linear-gradient(to left, var(--edge-color, rgba(255, 45, 85, 0.20)) 0%, transparent 100%);
   flex-direction: column;
   gap: 0.5rem;
 }
 
 /* TOP */
 .edge-zone-top {
-  top: 0; left: 0;
-  width: 100%; height: 9%;
-  background: linear-gradient(to bottom, var(--edge-color, rgba(255,45,85,0.20)) 0%, transparent 100%);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 9%;
+  background: linear-gradient(to bottom, var(--edge-color, rgba(255, 45, 85, 0.20)) 0%, transparent 100%);
   flex-direction: row;
   gap: 0.5rem;
 }
 
 /* BOTTOM */
 .edge-zone-bottom {
-  bottom: 0; left: 0;
-  width: 100%; height: 9%;
-  background: linear-gradient(to top, var(--edge-color, rgba(255,45,85,0.20)) 0%, transparent 100%);
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 9%;
+  background: linear-gradient(to top, var(--edge-color, rgba(255, 45, 85, 0.20)) 0%, transparent 100%);
   flex-direction: row;
   gap: 0.5rem;
 }
@@ -1403,7 +1618,7 @@ body, html, #root {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: 
+  background-image:
     linear-gradient(rgba(139, 92, 246, 0.08) 1px, transparent 1px),
     linear-gradient(90deg, rgba(139, 92, 246, 0.08) 1px, transparent 1px);
   background-size: 15px 15px;
@@ -1429,8 +1644,13 @@ body, html, #root {
 }
 
 @keyframes float-slow {
-  0% { transform: translateY(-4px) rotate(-3deg); }
-  100% { transform: translateY(4px) rotate(3deg); }
+  0% {
+    transform: translateY(-4px) rotate(-3deg);
+  }
+
+  100% {
+    transform: translateY(4px) rotate(3deg);
+  }
 }
 
 .crt-artifact-details-col {
@@ -1478,7 +1698,8 @@ body, html, #root {
 }
 
 .artifact-prop-label {
-  color: #c084fc; /* purple label */
+  color: #c084fc;
+  /* purple label */
   font-weight: bold;
 }
 
@@ -1488,7 +1709,8 @@ body, html, #root {
 
 .artifact-desc-header {
   font-size: 0.6rem;
-  color: #fbbf24; /* yellow label */
+  color: #fbbf24;
+  /* yellow label */
   font-weight: bold;
   letter-spacing: 0.05em;
   margin-bottom: 1px;
@@ -1521,7 +1743,8 @@ body, html, #root {
 
 .crt-metadata-label {
   font-size: 0.52rem;
-  color: #fbbf24; /* gold label */
+  color: #fbbf24;
+  /* gold label */
   font-weight: bold;
   letter-spacing: 0.05em;
   margin-bottom: 1px;
@@ -1529,7 +1752,8 @@ body, html, #root {
 
 .crt-metadata-val {
   font-size: 0.6rem;
-  color: #93c5fd; /* light blue values */
+  color: #93c5fd;
+  /* light blue values */
   font-weight: 700;
   white-space: nowrap;
   overflow: hidden;
@@ -1556,7 +1780,8 @@ body, html, #root {
 }
 
 .mini-signal-bar.active {
-  background: #10b981; /* emerald active */
+  background: #10b981;
+  /* emerald active */
   box-shadow: 0 0 4px #10b981;
 }
 
@@ -1568,7 +1793,9 @@ body, html, #root {
 }
 
 .crt-cable-return-btn.return-to-sky-btn {
-  background: #4c1d95; /* deep purple background */
+  max-width: 95%;
+  background: #4c1d95;
+  /* deep purple background */
   border: 1px solid #7c3aed;
   color: #ffffff;
   font-family: 'Share Tech Mono', monospace !important;
@@ -1588,5 +1815,3 @@ body, html, #root {
   box-shadow: 0 0 15px rgba(167, 139, 250, 0.6);
   transform: translateY(-1px);
 }
-
-

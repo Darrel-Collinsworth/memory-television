@@ -26,11 +26,11 @@ export default function App() {
   const aberrationOffset: [number, number] = transitioning 
     ? [0.018, 0.018] 
     : selectedArtifactId
-      ? [0.0002, 0.0002] // Crisp and sharp for excellent readability during focus inspection!
+      ? [0, 0] // Fully disabled in focus mode for maximum text readability
       : [0.0012, 0.0012];
 
   // Dynamic bloom intensity and vignette during transition, focus, or exploration
-  const bloomIntensity = transitioning ? 2.5 : selectedArtifactId ? 0.08 : isHome ? 0.18 : 0.45;
+  const bloomIntensity = transitioning ? 2.5 : selectedArtifactId ? 0 : isHome ? 0.18 : 0.45;
   const vignetteAmount = transitioning ? 1.5 : selectedArtifactId ? 0.38 : isHome ? 0.55 : 1.1;
 
   return (

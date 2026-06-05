@@ -23,7 +23,7 @@ export const MemoryTelevision = () => {
   // artifact focus state so the CRT always starts in Exploration Mode in new worlds.
   useEffect(() => {
     setSelectedArtifactId(null);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentWorld]);
 
   // Smoothly lerped color ref for CRT dynamic glow
@@ -103,8 +103,8 @@ export const MemoryTelevision = () => {
     tvRef.current.scale.set(scale, scale, scale);
 
     // Phosphor ambient light color smooth-interpolation
-    const targetHex = hoveredWorld 
-      ? worlds[hoveredWorld]?.themeColor 
+    const targetHex = hoveredWorld
+      ? worlds[hoveredWorld]?.themeColor
       : (currentWorld !== 'home' ? worlds[currentWorld]?.themeColor : '#2563eb');
     const targetColor = new THREE.Color(targetHex);
     activeColorRef.current.lerp(targetColor, 0.1);
@@ -123,15 +123,15 @@ export const MemoryTelevision = () => {
       <group ref={tvRef}>
         {/* Main TV Casing Group */}
         <group rotation={[0, 0, 0]}>
-          
+
           {/* --- CHUNKY VINTAGE SILVER PLASTIC BEZEL/FRONT --- */}
           <group>
             {/* Main Bezel Casing */}
             <mesh castShadow receiveShadow position={[0, 0.08, 0]}>
               <boxGeometry args={[2.5, 2.05, 0.38]} />
-              <meshStandardMaterial 
+              <meshStandardMaterial
                 color="#c5c7ce" // Satin-silver painted plastic — early 2000s Zenith styling
-                roughness={0.48} 
+                roughness={0.48}
                 metalness={0.12}
               />
             </mesh>
@@ -200,7 +200,7 @@ export const MemoryTelevision = () => {
                 <cylinderGeometry args={[0.038, 0.038, 0.01, 24]} />
                 <meshStandardMaterial color="#111827" roughness={0.9} />
               </mesh>
-              
+
               {/* 3D Italicized "B" structure (composed of double-layered meshes) */}
               <group position={[-0.005, 0, 0.006]}>
                 {/* Slanted vertical stem */}
@@ -260,9 +260,9 @@ export const MemoryTelevision = () => {
           {/* Substantial CRT posterior chassis representing cathode tube depth */}
           <mesh position={[0, 0.08, -0.95]} rotation={[Math.PI / 2, Math.PI / 4, 0]} castShadow>
             <cylinderGeometry args={[1.05, 1.48, 1.7, 4]} />
-            <meshStandardMaterial 
+            <meshStandardMaterial
               color="#1d1e22" // Classic dark textured high-impact back plastic
-              roughness={0.75} 
+              roughness={0.75}
               metalness={0.1}
             />
           </mesh>
@@ -368,7 +368,7 @@ export const MemoryTelevision = () => {
           {/* --- BOTTOM TV/VCR COMBO DASHBOARD --- */}
           {/* Lower cabinet containing the mechanical VHS loader slot and physical tactile controls */}
           <group position={[0, -0.73, 0.19]}>
-            
+
             {/* Dashboard Casing Backer Plate */}
             <mesh castShadow>
               <boxGeometry args={[1.84, 0.36, 0.02]} />
@@ -392,7 +392,7 @@ export const MemoryTelevision = () => {
             >
               HI-FI STEREO
             </Html>
-            
+
             <Html
               transform
               distanceFactor={1.4}
@@ -578,9 +578,9 @@ export const MemoryTelevision = () => {
               <group position={[0.31, 0, 0]}>
                 <mesh position={[0, 0, 0.002]} castShadow>
                   <sphereGeometry args={[0.008, 8, 8]} />
-                  <meshStandardMaterial 
-                    color="#ea580c" 
-                    emissive="#ea580c" 
+                  <meshStandardMaterial
+                    color="#ea580c"
+                    emissive="#ea580c"
                     emissiveIntensity={0.8}
                   />
                 </mesh>
@@ -613,9 +613,9 @@ export const MemoryTelevision = () => {
               {/* Glowing Active indicator LED */}
               <mesh position={[0.055, 0, 0.005]} castShadow>
                 <sphereGeometry args={[0.008, 8, 8]} />
-                <meshStandardMaterial 
-                  color="#22c55e" 
-                  emissive="#22c55e" 
+                <meshStandardMaterial
+                  color="#22c55e"
+                  emissive="#22c55e"
                   emissiveIntensity={1.4}
                 />
               </mesh>
@@ -648,7 +648,7 @@ export const MemoryTelevision = () => {
                 <boxGeometry args={[0.032, 0.012, 0.012]} />
                 <meshStandardMaterial color="#374151" roughness={0.65} />
               </mesh>
-              
+
               {/* Oval Vol + */}
               <mesh position={[0.024, 0, 0]} castShadow rotation={[Math.PI / 2, 0, 0]}>
                 <cylinderGeometry args={[0.016, 0.016, 0.012, 16]} />
@@ -718,7 +718,7 @@ export const MemoryTelevision = () => {
             </group>
 
           </group>
-          
+
         </group>
       </group>
     </group>

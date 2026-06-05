@@ -225,8 +225,10 @@ export const CRTScreen = () => {
             {/* Ticker footer */}
             <div className="crt-world-footer-ticker" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
               <div className="ticker-label" style={{ color: '#fbbf24' }}>USE ESCAPE KEY:</div>
-              <div className="ticker-text-scroll font-mono" style={{ color: '#f5c518' }}>
-                OR ESC TO RETURN TO EXPLORATION · BROADCAST BANDWIDTH ACTIVE · ANALOG FREQUENCY INTENSITY STABILIZED
+              <div className="ticker-track">
+                <div className="ticker-text-scroll font-mono" style={{ color: '#f5c518' }}>
+                  OR ESC TO RETURN TO EXPLORATION · BROADCAST BANDWIDTH ACTIVE · ANALOG FREQUENCY INTENSITY STABILIZED
+                </div>
               </div>
             </div>
           </div>
@@ -300,8 +302,10 @@ export const CRTScreen = () => {
             {/* Decorative bottom ticker */}
             <div className="crt-world-footer-ticker">
               <div className="ticker-label">CABLE SEARCH:</div>
-              <div className="ticker-text-scroll">
-                CONNECTED TO SURREAL ARCHIVE · PRESS L/R ARROWS TO PAN CAMERA VIEW · USE SCREEN BUTTONS TO CONTROL VCR 
+              <div className="ticker-track">
+                <div className="ticker-text-scroll">
+                  CONNECTED TO SURREAL ARCHIVE · PRESS L/R ARROWS TO PAN CAMERA VIEW · USE SCREEN BUTTONS TO CONTROL VCR 
+                </div>
               </div>
             </div>
           </div>
